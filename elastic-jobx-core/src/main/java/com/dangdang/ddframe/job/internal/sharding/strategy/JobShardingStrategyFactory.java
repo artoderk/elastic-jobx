@@ -89,12 +89,13 @@ public final class JobShardingStrategyFactory {
     		try {
     			// 从注册中心获取全局分片策略类并编译
     			clz = dynamicCodeCompiler.compile(globalConfigService.getJobShardingStrategy(jobShardingStrategyClassName), className);
-                jobShardingStrategy = getInstance(clz, jobShardingStrategyClassName);
 			} catch (Exception e) {
                 jobShardingStrategy = new AverageAllocationJobShardingStrategy();
 				log.error("获取全局动态分片策略类出错，使用默认分片策略:[AverageAllocationJobShardingStrategy]", e);;
 			}
     	}
+    	// 获取分片策略实例
+    	jobShardingStrategy = getInstance(clz, jobShardingStrategyClassName);
     	
     	return jobShardingStrategy;
     }
