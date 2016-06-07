@@ -84,7 +84,7 @@ public class JobDemo {
     private JobConfiguration jobConfig1_1 = new JobConfiguration("simpleJob", (Class<? extends ElasticJob>) SimpleJobDemo.class, 1, "0/5 * * * * ?");
     
     // 定义作业1_2简化配置对象
-    private JobConfiguration jobConfig1_2 = new JobShortConfiguration("simpleJob", (Class<? extends ElasticJob>) SimpleJobDemo.class);
+    private JobConfiguration jobConfig1_2 = new JobShortConfiguration("myElasticJob", (Class<? extends ElasticJob>) MyElasticJob.class);
     
     // 定义作业2配置对象
     private JobConfiguration jobConfig2 = new JobConfiguration("throughputDataFlowJob", ThroughputDataFlowJobDemo.class, 1, "0/5 * * * * ?");
