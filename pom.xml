@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dangdang</groupId>
     <artifactId>elastic-jobx</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
     <description>Elastic-Jobx - distributed scheduled job solution</description>
@@ -573,9 +573,9 @@
     </licenses>
     
     <scm>
-        <connection>scm:git:https://github.com/terrymanu/dangdangdotcom/elastic-job.git</connection>
-        <developerConnection>scm:git:git@github.com:terrymanu/dangdangdotcom/elastic-job.git</developerConnection>
-        <url>https://github.com/terrymanu/dangdangdotcom/elastic-job</url>
+        <connection>scm:git:https://github.com/artoderk/elastic-jobx.git</connection>
+        <developerConnection>scm:git:git@github.com:artoderk/elastic-jobx.git</developerConnection>
+        <url>https://github.com/artoderk/elastic-jobx.git</url>
     </scm>
     
     <mailingLists>

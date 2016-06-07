@@ -16,10 +16,14 @@ public class JobShardingStrategyFactoryTest {
         assertThat(JobShardingStrategyFactory.getStrategy(null), instanceOf(AverageAllocationJobShardingStrategy.class));
     }
     
-    @Test(expected = JobShardingStrategyClassConfigurationException.class)
+//    @Test(expected = JobShardingStrategyClassConfigurationException.class)
+//    public void assertGetStrategyFailureWhenClassNotFound() {
+//        JobShardingStrategyFactory.getStrategy("NotClass");
+//    }
     public void assertGetStrategyFailureWhenClassNotFound() {
-        JobShardingStrategyFactory.getStrategy("NotClass");
-    }
+    	// 出错取默认的分片策略
+		assertThat(JobShardingStrategyFactory.getStrategy("NotClass"), instanceOf(AverageAllocationJobShardingStrategy.class));
+	}
     
     @Test(expected = IllegalStateException.class)
     public void assertGetStrategyFailureWhenNotStrategyClass() {
