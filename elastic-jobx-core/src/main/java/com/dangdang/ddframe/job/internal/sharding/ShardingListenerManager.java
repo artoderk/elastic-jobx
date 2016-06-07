@@ -66,7 +66,7 @@ public class ShardingListenerManager extends AbstractListenerManager {
                 shardingService.setReshardingFlag();
                 executionService.setNeedFixExecutionInfoFlag();
             }
-            // 动态变列分片策略
+            // 动态变更分片策略
             if (configurationNode.isShardingStrategyClassPath(path)) {
                 shardingService.setReshardingFlag();
             }
