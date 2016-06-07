@@ -30,20 +30,22 @@
 
 * **引入maven依赖**
 
-elastic-job已经发布到中央仓库，可以在pom.xml文件中直接引入maven坐标。
+1. 下载整个项目；
+2. 使用maven打包；
+3. 引入elastic-jobx-core.jar或elastic-jobx-spring.jar
 
 ```xml
-<!-- 引入elastic-job核心模块 -->
+<!-- 引入elastic-jobx核心模块 -->
 <dependency>
     <groupId>com.dangdang</groupId>
-    <artifactId>elastic-job-core</artifactId>
+    <artifactId>elastic-jobx-core</artifactId>
     <version>${lasted.release.version}</version>
 </dependency>
 
 <!-- 使用springframework自定义命名空间时引入 -->
 <dependency>
     <groupId>com.dangdang</groupId>
-    <artifactId>elastic-job-spring</artifactId>
+    <artifactId>elastic-jobx-spring</artifactId>
     <version>${lasted.release.version}</version>
 </dependency>
 ```
@@ -55,6 +57,56 @@ public class MyElasticJob extends AbstractSimpleElasticJob {
     @Override
     public void process(JobExecutionMultipleShardingContext context) {
         // do something by sharding items
+    }
+}
+```
+```java
+import com.dangdang.ddframe.job.api.ElasticJob;
+import com.dangdang.ddframe.job.api.JobConfiguration;
+import com.dangdang.ddframe.job.api.JobScheduler;
+import com.dangdang.ddframe.job.api.JobShortConfiguration;
+import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
+import com.dangdang.ddframe.reg.zookeeper.ZookeeperConfiguration;
+import com.dangdang.ddframe.reg.zookeeper.ZookeeperRegistryCenter;
+import com.dangdang.example.elasticjob.core.job.SequenceDataFlowJobDemo;
+import com.dangdang.example.elasticjob.core.job.SimpleJobDemo;
+import com.dangdang.example.elasticjob.core.job.ThroughputDataFlowJobDemo;
+
+public class JobDemo {
+    
+    // 定义Zookeeper注册中心配置对象
+    private ZookeeperConfiguration zkConfig = new ZookeeperConfiguration("localhost:2181", "elasticjob-local", 1000, 3000, 3);
+    
+    // 定义Zookeeper注册中心
+    private CoordinatorRegistryCenter regCenter = new ZookeeperRegistryCenter(zkConfig);
+    
+    // 定义作业1_1配置对象
+    private JobConfiguration jobConfig1_1 = new JobConfiguration("simpleJob", (Class<? extends ElasticJob>) SimpleJobDemo.class, 1, "0/5 * * * * ?");
+    
+    // 定义作业1_2简化配置对象
+    private JobConfiguration jobConfig1_2 = new JobShortConfiguration("simpleJob", (Class<? extends ElasticJob>) SimpleJobDemo.class);
+    
+    // 定义作业2配置对象
+    private JobConfiguration jobConfig2 = new JobConfiguration("throughputDataFlowJob", ThroughputDataFlowJobDemo.class, 1, "0/5 * * * * ?");
+    
+    // 定义作业3配置对象
+    private JobConfiguration jobConfig3 = new JobConfiguration("sequenceDataFlowJob", SequenceDataFlowJobDemo.class, 10, "0/5 * * * * ?");
+    
+    public static void main(final String[] args) {
+        new JobDemo().init();
+    }
+    
+    private void init() {
+        // 连接注册中心
+        regCenter.init();
+        // 启动作业1_1
+        new JobScheduler(regCenter, jobConfig1_1).init();
+        // 启动作业1_2
+        new JobScheduler(regCenter, jobConfig1_2).init();
+        // 启动作业2
+        new JobScheduler(regCenter, jobConfig2).init();
+        // 启动作业3
+        new JobScheduler(regCenter, jobConfig3).init();
     }
 }
 ```
@@ -77,6 +129,8 @@ public class MyElasticJob extends AbstractSimpleElasticJob {
     <!--配置作业注册中心 -->
     <reg:zookeeper id="regCenter" serverLists=" yourhost:2181" namespace="dd-job" baseSleepTimeMilliseconds="1000" maxSleepTimeMilliseconds="3000" maxRetries="3" />
 
+    <!-- 配置作业- 简化配置 -->
+    <job:bean id="simpleElasticJob" class="com.dangdang.example.elasticjob.spring.job.SimpleJobDemo" regCenter="regCenter" />
     <!-- 配置作业-->
     <job:bean id="myElasticJob" class="xxx.MyElasticJob" regCenter="regCenter" cron="0/10 * * * * ?"   shardingTotalCount="3" shardingItemParameters="0=A,1=B,2=C" />
 </beans>
