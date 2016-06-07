@@ -1,30 +1,10 @@
-##Elastic-Job - distributed scheduled job solution
+##Elastic-Jobx - distributed scheduled job solution
 
-  Elastic-Job是ddframe中dd-job的作业模块中分离出来的分布式弹性作业框架。去掉了和dd-job中的监控和ddframe接入规范部分。该项目基于成熟的开源产品Quartz和Zookeeper及其客户端Curator进行二次开发。
-
-  ddframe其他模块也有可独立开源的部分，之前当当曾开源过dd-soa的基石模块DubboX。
-
-  elastic-job和ddframe关系见下图
-
-  ![ddframe演进图](http://dangdangdotcom.github.io/elastic-job/img/ddframe.jpg)
-
-# Release Notes
-* elastic-job&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Maven Status](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job)
-* elastic-job-core&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Maven Status](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job-core)
-* elastic-job-spring&nbsp;&nbsp;&nbsp;[![Maven Status](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.dangdang/elastic-job-spring)
-
-# License
-[![Hex.pm](http://dangdangdotcom.github.io/elastic-job/img/license.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
-# Build Status
-[![Build Status](https://secure.travis-ci.org/dangdangdotcom/elastic-job.png?branch=master)](https://travis-ci.org/dangdangdotcom/elastic-job)
-[![Coverage Status](https://coveralls.io/repos/dangdangdotcom/elastic-job/badge.svg?branch=master&service=github)](https://coveralls.io/github/dangdangdotcom/elastic-job?branch=master)
-##主要贡献者
-* 张亮 [当当网](http://www.dangdang.com/) zhangliang@dangdang.com
-* 曹昊 [当当网](http://www.dangdang.com/) caohao@dangdang.com
-* 江树建 [当当网](http://www.dangdang.com/) jiangshujian@dangdang.com
-
-**讨论QQ群：**430066234（不限于Elastic-Job，包括分布式，定时任务相关以及其他互联网技术交流）
+  Elastic-Jobx扩展至当当的Elastic-job，增加如下功能:
+  1. 支持jdk1.6;
+  2. 管控平台增加任务添加功能；
+  3. 指定时间段任务跳过执行功能；
+  4. 动态分片策略功能。
 
 ## Elastic-Job主要功能
 
