@@ -20,7 +20,7 @@
 * **指定时间段任务跳过执行功能：** 在有大促或其它需求时，可提前配置全局或单个任务的暂停时间段。在指定时间段内任务将跳过执行。
 * ![任务跳过执功能](https://github.com/artoderk/elastic-jobx/blob/master/elastic-jobx-doc/content/img/console_F02.png)
 
-* **动态分片策略功能：** 可以在管控平台上传分片策略类，动态调整分片策略类。
+* **动态分片策略功能：** 可以在管控平台上传分片策略类，动态调整分片策略。
 * ![任务跳过执功能](https://github.com/artoderk/elastic-jobx/blob/master/elastic-jobx-doc/content/img/console_F03.png)
 
 ### ZK添加节点
