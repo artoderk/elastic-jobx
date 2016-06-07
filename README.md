@@ -1,7 +1,10 @@
 ##Elastic-Jobx - distributed scheduled job solution
 
   Elastic-Jobx扩展至当当的Elastic-job，增加如下功能:
-  
+  1. 支持jdk1.6;
+  2. 管控平台增加任务添加功能；
+  3. 增加指定时间段任务跳过执行功能；
+  4. 动态分片策略功能。
 
 ## Elastic-Job主要功能
 
