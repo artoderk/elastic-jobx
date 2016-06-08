@@ -20,6 +20,7 @@ package com.dangdang.ddframe.job.internal.listener;
 import com.dangdang.ddframe.job.api.JobConfiguration;
 import com.dangdang.ddframe.job.api.listener.ElasticJobListener;
 import com.dangdang.ddframe.job.internal.config.ConfigurationListenerManager;
+import com.dangdang.ddframe.job.internal.config.global.GlobalConfigListenerManager;
 import com.dangdang.ddframe.job.internal.election.ElectionListenerManager;
 import com.dangdang.ddframe.job.internal.execution.ExecutionListenerManager;
 import com.dangdang.ddframe.job.internal.failover.FailoverListenerManager;
@@ -50,6 +51,8 @@ public class ListenerManager {
     private final ConfigurationListenerManager configurationListenerManager;
 
     private final GuaranteeListenerManager guaranteeListenerManager;
+
+    private final GlobalConfigListenerManager globalConfigListenerManager;
     
     public ListenerManager(final CoordinatorRegistryCenter coordinatorRegistryCenter, final JobConfiguration jobConfiguration, final List<ElasticJobListener> elasticJobListeners) {
         electionListenerManager = new ElectionListenerManager(coordinatorRegistryCenter, jobConfiguration);
@@ -59,6 +62,7 @@ public class ListenerManager {
         jobOperationListenerManager = new JobOperationListenerManager(coordinatorRegistryCenter, jobConfiguration);
         configurationListenerManager = new ConfigurationListenerManager(coordinatorRegistryCenter, jobConfiguration);
         guaranteeListenerManager = new GuaranteeListenerManager(coordinatorRegistryCenter, jobConfiguration, elasticJobListeners);
+        globalConfigListenerManager = new GlobalConfigListenerManager(coordinatorRegistryCenter);
     }
     
     /**
@@ -72,5 +76,6 @@ public class ListenerManager {
         jobOperationListenerManager.start();
         configurationListenerManager.start();
         guaranteeListenerManager.start();
+        globalConfigListenerManager.start();
     }
 }

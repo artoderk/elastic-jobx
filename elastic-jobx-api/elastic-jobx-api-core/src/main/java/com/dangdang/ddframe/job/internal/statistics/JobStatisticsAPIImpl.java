@@ -21,7 +21,7 @@ import com.dangdang.ddframe.job.api.JobStatisticsAPI;
 import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import com.dangdang.ddframe.job.domain.JobBriefInfo;
 import com.dangdang.ddframe.job.domain.ServerInfo;
-import com.dangdang.ddframe.job.internal.storage.GlobalNodePath;
+import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.job.internal.storage.JobNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 

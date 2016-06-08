@@ -48,7 +48,7 @@ function renderStrategies() {
 
         for (var i = 0;i < data.length;i++) {
             var baseTd = "<td>" + data[i].no + "</td><td>" + data[i].name + "</td><td>" + data[i].path + "</td>";
-            var removeButton = "<td>" + "<button operation='remove' class='btn btn-danger' ip='" + data[i].name + "'>删除</button>" + "</td>";
+            var removeButton = "<td>" + "<button operation='remove' class='btn btn-danger' path='" + data[i].path + "'>删除</button>" + "</td>";
             var trClass = "info";
             $("#strategyTable tbody").append("<tr class='" + trClass + "'>" + baseTd + removeButton + "</tr>");
         }
@@ -57,7 +57,7 @@ function renderStrategies() {
 
 function bindRemoveButtons() {
     $(document).on("click", "button[operation='remove']", function(event) {
-        $.post("global/delStrategy", {name : $(event.currentTarget).attr("name")}, function (data) {
+        $.post("global/delStrategy", {path : $(event.currentTarget).attr("path")}, function (data) {
         	renderStrategies();
             showSuccessDialog();
         });

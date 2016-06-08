@@ -76,8 +76,8 @@ public class GlobalController {
     }
 
     @RequestMapping(value = "delStrategy", method = RequestMethod.POST)
-    public void delStrategy(final String name) {
-        jobAPIService.getGlobalSettingsAPI().removeGlobalStrategy(name);
+    public void delStrategy(final String path) {
+        jobAPIService.getGlobalSettingsAPI().removeGlobalStrategy(path);
     }
 
 }

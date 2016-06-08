@@ -17,25 +17,27 @@
 
 package com.dangdang.ddframe.job.internal.listener;
 
-import com.dangdang.ddframe.job.api.JobConfiguration;
-import com.dangdang.ddframe.job.api.listener.ElasticJobListener;
-import com.dangdang.ddframe.job.fixture.TestJob;
-import com.dangdang.ddframe.job.internal.config.ConfigurationListenerManager;
-import com.dangdang.ddframe.job.internal.election.ElectionListenerManager;
-import com.dangdang.ddframe.job.internal.execution.ExecutionListenerManager;
-import com.dangdang.ddframe.job.internal.failover.FailoverListenerManager;
-import com.dangdang.ddframe.job.internal.guarantee.GuaranteeListenerManager;
-import com.dangdang.ddframe.job.internal.server.JobOperationListenerManager;
-import com.dangdang.ddframe.job.internal.sharding.ShardingListenerManager;
+import static org.mockito.Mockito.verify;
+
+import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.unitils.util.ReflectionUtils;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.verify;
+import com.dangdang.ddframe.job.api.JobConfiguration;
+import com.dangdang.ddframe.job.api.listener.ElasticJobListener;
+import com.dangdang.ddframe.job.fixture.TestJob;
+import com.dangdang.ddframe.job.internal.config.ConfigurationListenerManager;
+import com.dangdang.ddframe.job.internal.config.global.GlobalConfigListenerManager;
+import com.dangdang.ddframe.job.internal.election.ElectionListenerManager;
+import com.dangdang.ddframe.job.internal.execution.ExecutionListenerManager;
+import com.dangdang.ddframe.job.internal.failover.FailoverListenerManager;
+import com.dangdang.ddframe.job.internal.guarantee.GuaranteeListenerManager;
+import com.dangdang.ddframe.job.internal.server.JobOperationListenerManager;
+import com.dangdang.ddframe.job.internal.sharding.ShardingListenerManager;
 
 public class ListenerManagerTest {
     
@@ -60,6 +62,9 @@ public class ListenerManagerTest {
     @Mock
     private GuaranteeListenerManager guaranteeListenerManager;
     
+    @Mock
+    private GlobalConfigListenerManager globalConfigListenerManager;
+    
     private final ListenerManager listenerManager = new ListenerManager(null, new JobConfiguration("testJob", TestJob.class, 3, "0/1 * * * * ?"), Collections.<ElasticJobListener>emptyList());
     
     @Before
@@ -72,6 +77,7 @@ public class ListenerManagerTest {
         ReflectionUtils.setFieldValue(listenerManager, "jobOperationListenerManager", jobOperationListenerManager);
         ReflectionUtils.setFieldValue(listenerManager, "configurationListenerManager", configurationListenerManager);
         ReflectionUtils.setFieldValue(listenerManager, "guaranteeListenerManager", guaranteeListenerManager);
+        ReflectionUtils.setFieldValue(listenerManager, "globalConfigListenerManager", globalConfigListenerManager);
     }
     
     @Test
@@ -84,5 +90,6 @@ public class ListenerManagerTest {
         verify(jobOperationListenerManager).start();
         verify(configurationListenerManager).start();
         verify(guaranteeListenerManager).start();
+        verify(globalConfigListenerManager).start();
     }
 }

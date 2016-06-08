@@ -15,7 +15,7 @@
  * </p>
  */
 
-package com.dangdang.ddframe.job.internal.storage;
+package com.dangdang.ddframe.job.internal.storage.global;
 
 import java.util.List;
 
