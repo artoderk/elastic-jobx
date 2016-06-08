@@ -60,7 +60,7 @@ public interface GlobalSettingsAPI {
     /**
      * 删除全局分片策略.
      *
-     * @param name 全局分片策略名
+     * @param path 全局分片策略全路径
      */
-    void removeGlobalStrategy(String name);
+    void removeGlobalStrategy(String path);
 }

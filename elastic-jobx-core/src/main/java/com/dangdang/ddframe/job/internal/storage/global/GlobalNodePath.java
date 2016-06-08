@@ -15,7 +15,7 @@
  * </p>
  */
 
-package com.dangdang.ddframe.job.internal.storage;
+package com.dangdang.ddframe.job.internal.storage.global;
 
 import lombok.NoArgsConstructor;
 
@@ -68,6 +68,16 @@ public final class GlobalNodePath {
      */
     public static String getStrategyNodePath(final String nodeName) {
         return String.format("%s/%s", STRATEGY, nodeName);
+    }
+
+    /**
+     * 判断是否为作业分片策略实现类节点路径.
+     *
+     * @param path 节点路径
+     * @return 是否为作业分片策略实现类节点路径
+     */
+    public static boolean isShardingStrategyPath(final String path) {
+        return path.indexOf(STRATEGY) == 0;
     }
 
 }

@@ -12,6 +12,7 @@
         <module>elastic-jobx-spring</module>
         <module>elastic-jobx-api</module>
         <module>elastic-jobx-console</module>
+        <module>elastic-jobx-example</module>
     </modules>
     
     <properties>

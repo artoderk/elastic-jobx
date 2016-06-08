@@ -25,7 +25,8 @@ import lombok.RequiredArgsConstructor;
 import com.dangdang.ddframe.job.api.GlobalSettingsAPI;
 import com.dangdang.ddframe.job.domain.GlobalConfig;
 import com.dangdang.ddframe.job.domain.GlobalStrategy;
-import com.dangdang.ddframe.job.internal.storage.GlobalNodePath;
+import com.dangdang.ddframe.job.internal.storage.JobNodePath;
+import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 
 /**
@@ -71,18 +72,89 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
 
 	@Override
 	public void updateGlobalStrategy(final GlobalStrategy globalStrategy) {
-		fillNode(GlobalNodePath.getStrategyNodePath(globalStrategy.getPath()), globalStrategy.getContent());
+		int result = fillNode(GlobalNodePath.getStrategyNodePath(globalStrategy.getPath()), globalStrategy.getContent());
+
+		// 如果是更新，则需要将所有用到该策略的任务重新分片
+		if (result == 1) {
+			List<String> jobNames = registryCenter.getChildrenKeys("/");
+			for (String each : jobNames) {
+				if (each.equals(GlobalNodePath.GLOBAL)) {
+					continue;
+				}
+				JobNodePath jobNodePath = new JobNodePath(each);
+				String jobShardingStrategyClass = registryCenter.get(jobNodePath.getConfigNodePath("jobShardingStrategyClass"));
+				// 如果有任务用到该策略，需要使用新策略重新分片
+				if (globalStrategy.getPath().equals(jobShardingStrategyClass)) {
+					setReshardingFlag(jobNodePath);
+				}
+			}
+		}
 	}
+
+	@Override
+	public void removeGlobalStrategy(final String path) {
+		if (null == path) return;
+		// 注意，删除全局策略后，原来用到该全局策略的任务不会重新分片，直到触发分片时会使用默认的策略(除非修改策略路径)
+        registryCenter.remove(GlobalNodePath.getStrategyNodePath(path));
+	}
+
+    /**
+     * 填充节点，存在则替换，不存在则持久化.
+     *
+     * @param nodePath 作业节点路径
+     * @param value 值
+     */
+    private int fillNode(final String nodePath, final Object value){
+        if (null == value || value.toString().equals(registryCenter.get(nodePath))) {
+            return 0;
+        }
+        if (isJobNodeExisted(nodePath)) {
+            registryCenter.update(nodePath, value.toString());
+            return 1;
+        } else {
+            registryCenter.persist(nodePath, value.toString());
+            return 2;
+        }
+    }
+
+    /**
+     * 判断作业节点是否存在.
+     *
+     * @param nodePath 作业节点路径
+     * @return 作业节点是否存在
+     */
+    private boolean isJobNodeExisted(final String nodePath) {
+        return registryCenter.isExisted(nodePath);
+    }
+
+    /**
+     * 根据策略类路径获取类名.
+     *
+     * @param path 策略类路径
+     * @return 类名
+     */
+    private String getStrategyName(final String path){
+    	if (path == null) return null;
+    	return path.substring(path.lastIndexOf(".") + 1);
+    }
+    
+    /**
+     * 设置需要重新分片的标记.
+     * 
+     * @param jobNodePath
+     */
+    private void setReshardingFlag(final JobNodePath jobNodePath) {
+    	String reshartdingFlagPath = jobNodePath.getFullPath("leader/sharding/necessary");
+    	if (!isJobNodeExisted(reshartdingFlagPath)) {
+    		registryCenter.persist(reshartdingFlagPath, "");
+    	}
+    }
+    
 	
 //	public int updateGlobalStrategy(final GlobalStrategy globalStrategy) {
 //        int flag = 0;
 //        FileInputStream fis = null;
 //        try {
-//        	// TODO test
-//        	if (globalStrategy.getFile() == null) {
-//        		globalStrategy.setFile(new File("D:\\Projects\\TestGroovy\\src\\groovy\\strategy"));
-//        		globalStrategy.setName("TestDynamicStrategy");
-//        	}
 //            fis = new FileInputStream(globalStrategy.getFile());
 //
 //            StringBuffer sb = new StringBuffer(4);
@@ -109,47 +181,4 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
 //        }
 //        return flag;
 //    }
-
-	@Override
-	public void removeGlobalStrategy(final String name) {
-        registryCenter.remove(GlobalNodePath.STRATEGY);
-	}
-
-    /**
-     * 填充节点，存在则替换，不存在则持久化.
-     *
-     * @param nodePath 作业节点路径
-     * @param value 值
-     */
-    private void fillNode(final String nodePath, final Object value){
-        if (null == value || value.toString().equals(registryCenter.get(nodePath))) {
-            return;
-        }
-        if (isJobNodeExisted(nodePath)) {
-            registryCenter.update(nodePath, value.toString());
-        } else {
-            registryCenter.persist(nodePath, value.toString());
-        }
-    }
-
-    /**
-     * 判断作业节点是否存在.
-     *
-     * @param nodePath 作业节点路径
-     * @return 作业节点是否存在
-     */
-    private boolean isJobNodeExisted(final String nodePath) {
-        return registryCenter.isExisted(nodePath);
-    }
-
-    /**
-     * 根据策略类路径获取类名.
-     *
-     * @param path 策略类路径
-     * @return 类名
-     */
-    private String getStrategyName(String path){
-    	if (path == null) return null;
-    	return path.substring(path.lastIndexOf(".") + 1);
-    }
 }

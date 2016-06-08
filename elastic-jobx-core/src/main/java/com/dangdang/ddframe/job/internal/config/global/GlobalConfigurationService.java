@@ -15,12 +15,12 @@
  * </p>
  */
 
-package com.dangdang.ddframe.job.internal.config;
+package com.dangdang.ddframe.job.internal.config.global;
 
 import java.util.Date;
 
-import com.dangdang.ddframe.job.internal.storage.GlobalNodePath;
-import com.dangdang.ddframe.job.internal.storage.GlobalNodeStorage;
+import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
+import com.dangdang.ddframe.job.internal.storage.global.GlobalNodeStorage;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 import com.dangdang.ddframe.util.DateUtil;
 import com.dangdang.ddframe.util.objectpool.HashObjectPool;
@@ -41,6 +41,7 @@ public class GlobalConfigurationService {
     
     private GlobalConfigurationService(final CoordinatorRegistryCenter coordinatorRegistryCenter) {
     	globalNodeStorage = new GlobalNodeStorage(coordinatorRegistryCenter);
+    	coordinatorRegistryCenter.addCacheData(GlobalNodePath.ROOT);
     }
     
     /**
@@ -64,6 +65,16 @@ public class GlobalConfigurationService {
         	}
     	}
     }
+    
+    /**
+     * 获取全局配置数据访问类
+     * 
+     * @return 全局配置数据访问类
+     */
+    public GlobalNodeStorage getGlobalNodeStorage() {
+    	return globalNodeStorage;
+    }
+    
     /**
      * 获取作业分片策略实现类.
      * 
