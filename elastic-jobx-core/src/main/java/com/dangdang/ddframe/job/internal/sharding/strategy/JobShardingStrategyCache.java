@@ -55,7 +55,14 @@ public final class JobShardingStrategyCache {
 	    	if (strategyInstancePool.containsKey(jobShardingStrategyFullPath)) {
 	    		return strategyInstancePool.get(jobShardingStrategyFullPath);
 	    	}
-	    	return getInnerStrategy(globalConfigService, jobShardingStrategyFullPath);
+	    	rwlock.readLock().unlock();
+	    	rwlock.writeLock().lock();
+	    	try {
+	    		return getInnerStrategy(globalConfigService, jobShardingStrategyFullPath);
+	    	} finally {
+	    		rwlock.readLock().lock();
+	    		rwlock.writeLock().unlock();
+	    	}
     	} finally {
     		rwlock.readLock().unlock();
         }
@@ -69,18 +76,16 @@ public final class JobShardingStrategyCache {
      * @return 分片策略类实例
      */
     private static JobShardingStrategy getInnerStrategy(final GlobalConfigurationService globalConfigService, final String jobShardingStrategyFullPath) {
-    	if (strategyInstancePool.containsKey(jobShardingStrategyFullPath)) {
-    		return strategyInstancePool.get(jobShardingStrategyFullPath);
-    	}
-
-    	// 从本地获取作业分片策略
-    	Class<?> clz = null;
+		if (strategyInstancePool.containsKey(jobShardingStrategyFullPath)) {
+			return strategyInstancePool.get(jobShardingStrategyFullPath);
+		}
+		Class<?> clz = null;
 		try {
 			clz = getStrategyClass(globalConfigService, jobShardingStrategyFullPath);
 		} catch (Throwable e) {
 			log.warn("获取全局动态分片策略类出错，使用默认分片策略:[AverageAllocationJobShardingStrategy]", e);
 		}
-    	return getInstance(clz, jobShardingStrategyFullPath);
+		return getInstance(clz, jobShardingStrategyFullPath);
     }
     
     /**
@@ -93,12 +98,14 @@ public final class JobShardingStrategyCache {
     private static Class<?> getStrategyClass(final GlobalConfigurationService globalConfigService, final String jobShardingStrategyFullPath) throws Throwable {
         Class<?> jobShardingStrategyClass = null;
 		try {
+			// 从本地获取作业分片策略
 			jobShardingStrategyClass = Class.forName(jobShardingStrategyFullPath);
 		} catch (ClassNotFoundException e) {
 			//
 		}
 		
 		if (null == jobShardingStrategyClass && null != globalConfigService) {
+			// 从注册中心获取作业分片策略
 			jobShardingStrategyClass = getRemoteStrategyClass(globalConfigService, jobShardingStrategyFullPath);
 		}
         return jobShardingStrategyClass;
