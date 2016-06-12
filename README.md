@@ -1,5 +1,5 @@
 ##Elastic-Jobx - distributed scheduled job solution
-[当当Elastic-Job](https://github.com/dangdangdotcom/elastic-job) 
+[当当Elastic-Job](https://github.com/dangdangdotcom/elastic-job/tree/1.0.7) 
 
   Elastic-Jobx扩展至当当的Elastic-job1.0.7，增加如下功能:
   1. 支持jdk1.6;
