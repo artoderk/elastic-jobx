@@ -46,6 +46,7 @@ public final class JobShardingStrategyCache {
      * @return 分片策略类实例
      */
     public static JobShardingStrategy getStrategy(final GlobalConfigurationService globalConfigService, final String jobShardingStrategyFullPath) {
+    	log.info("使用分片策略:" + jobShardingStrategyFullPath);
     	if (Strings.isNullOrEmpty(jobShardingStrategyFullPath)) {
     		return strategyInstancePool.get(DEFAULT_STRATEGY);
     	}

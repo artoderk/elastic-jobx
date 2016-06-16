@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.reg.spring.placeholder;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -56,7 +57,8 @@ public final class PlaceholderResolved {
         for (Entry<String, PropertySourcesPlaceholderConfigurer> entry : placeholderMap.entrySet()) {
             PropertySourcesPropertyResolver propertyResolver;
             try {
-                propertyResolver = new PropertySourcesPropertyResolver(entry.getValue().getAppliedPropertySources());
+               // propertyResolver = new PropertySourcesPropertyResolver(entry.getValue().getAppliedPropertySources());
+                throw new NoSuchMethodError();
             } catch (final IllegalStateException ex) {
                 continue;
             } catch (final NoSuchMethodError ex) {
@@ -97,6 +99,8 @@ public final class PlaceholderResolved {
 //    }
     private PropertySourcesPropertyResolver getPropertyResolverBeforeSpring4(final PropertySourcesPlaceholderConfigurer placeholderConfigurer) 
     		throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
-        return new PropertySourcesPropertyResolver((PropertySources) PropertySourcesPlaceholderConfigurer.class.getField("propertySources").get(placeholderConfigurer));
+    	Field field = placeholderConfigurer.getClass().getDeclaredField("propertySources");
+    	field.setAccessible(true);
+        return new PropertySourcesPropertyResolver((PropertySources) field.get(placeholderConfigurer));
     }
 }

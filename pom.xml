@@ -26,7 +26,7 @@
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <quartz.version>2.2.1</quartz.version>
         <curator.version>2.10.0</curator.version>
-        <springframework.version>4.1.1.RELEASE</springframework.version>
+        <springframework.version>3.2.17.RELEASE</springframework.version>
         <aspectj.version>1.8.0</aspectj.version>
         <slf4j.version>1.7.7</slf4j.version>
         <logback.version>1.1.2</logback.version>
