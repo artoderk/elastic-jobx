@@ -2,7 +2,7 @@
 [当当Elastic-Job](https://github.com/dangdangdotcom/elastic-job/tree/1.0.7) 
 
   Elastic-Jobx扩展至当当的Elastic-job1.0.7，增加如下功能:
-  1. 支持jdk1.6，客户端支持Spring3;
+  1. 支持jdk1.6，客户端支持Spring3.1+;
   2. 管控平台增加任务添加功能；
   3. 指定时间段任务跳过执行功能；
   4. 动态分片策略功能。

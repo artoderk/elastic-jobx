@@ -32,7 +32,7 @@ import org.springframework.core.env.PropertySourcesPropertyResolver;
  * 处理占位符的类.
  * 
  * @author zhangliang
- * @author xiong.j support jdk1.6
+ * @author xiong.j support jdk1.6 and spring3.1+
  */
 @Slf4j
 public final class PlaceholderResolved {
