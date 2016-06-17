@@ -35,8 +35,6 @@ public class GlobalConfigurationService {
 	private static final HashObjectPool<CoordinatorRegistryCenter, GlobalConfigurationService> globalConfigClassPool = 
 			new HashObjectPool<CoordinatorRegistryCenter, GlobalConfigurationService>();
 	
-    private final static Object lock = new Object();
-    
     private final GlobalNodeStorage globalNodeStorage;
     
     private GlobalConfigurationService(final CoordinatorRegistryCenter coordinatorRegistryCenter) {
@@ -57,7 +55,7 @@ public class GlobalConfigurationService {
     		return globalConfigClassPool.get(coordinatorRegistryCenter);
     	}
     	
-    	synchronized(lock){
+    	synchronized(GlobalConfigurationService.class){
     		if (globalConfigClassPool.containsKey(coordinatorRegistryCenter)) {
         		return globalConfigClassPool.get(coordinatorRegistryCenter);
         	} else {
