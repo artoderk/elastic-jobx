@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author zhangliang
  * @author caohao
- * @author xiong.j support jdk1.6
+ * @author xiong.j
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JobRegistry {
@@ -65,11 +65,20 @@ public final class JobRegistry {
     
     /**
      * 获取作业调度控制器.
-     * 
+     *
      * @param jobName 作业名称
      * @return 作业调度控制器
      */
     public JobScheduleController getJobScheduleController(final String jobName) {
         return schedulerMap.get(jobName);
+    }
+
+    /**
+     * 获取作业注册表.
+     *
+     * @return 作业注册表
+     */
+    public Map<String, JobScheduleController> getSchedulerMap() {
+        return schedulerMap;
     }
 }

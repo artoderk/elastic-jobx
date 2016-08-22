@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.reg.spring.namespace;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
@@ -29,8 +30,9 @@ import com.google.common.base.Strings;
  * 使用Spring启动基于Zookeeper的注册中心.
  * 
  * @author zhangliang
+ * @author xiong.j
  */
-public final class SpringZookeeperRegistryCenter extends ZookeeperRegistryCenter implements BeanFactoryPostProcessor {
+public final class SpringZookeeperRegistryCenter extends ZookeeperRegistryCenter implements BeanFactoryPostProcessor, DisposableBean {
     
     private final SpringZookeeperConfigurationDto springZookeeperConfigurationDto;
     
@@ -76,5 +78,10 @@ public final class SpringZookeeperRegistryCenter extends ZookeeperRegistryCenter
             getZkConfig().setOverwrite(Boolean.valueOf(overwrite));
         }
         init();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        close();
     }
 }

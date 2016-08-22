@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import com.dangdang.ddframe.job.api.listener.ElasticJobListener;
 import com.dangdang.ddframe.job.spring.util.AopTargetUtils;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -33,7 +34,7 @@ import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
  *
  * @author caohao
  */
-public class SpringJobScheduler extends JobScheduler implements ApplicationContextAware {
+public class SpringJobScheduler extends JobScheduler implements ApplicationContextAware, DisposableBean {
     
     private ApplicationContext applicationContext;
     
@@ -62,5 +63,10 @@ public class SpringJobScheduler extends JobScheduler implements ApplicationConte
     protected void prepareEnvironments(final Properties props) {
         SpringJobFactory.setApplicationContext(applicationContext);
         props.put("org.quartz.scheduler.jobFactory.class", SpringJobFactory.class.getName());
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        close();
     }
 }

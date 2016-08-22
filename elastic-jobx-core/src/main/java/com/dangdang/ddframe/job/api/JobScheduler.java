@@ -36,6 +36,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -43,6 +44,7 @@ import java.util.Properties;
  * 
  * @author zhangliang
  * @author caohao
+ * @author xiong.j
  */
 @Slf4j
 public class JobScheduler {
@@ -99,7 +101,30 @@ public class JobScheduler {
         }
         JobRegistry.getInstance().addJobScheduleController(jobName, jobScheduleController);
     }
-    
+
+    /**
+     * 关闭作业
+     */
+    public void close(){
+        log.debug("Elastic job: job controller close, job name is: {}.", jobName);
+        JobScheduleController jobScheduleController = JobRegistry.getInstance().getJobScheduleController(jobName);
+        if (jobScheduleController != null) {
+            jobScheduleController.shutdown();
+        }
+    }
+
+    /**
+     * 关闭作业
+     */
+    public void closeAll(){
+        Map<String, JobScheduleController> schedulerMap = JobRegistry.getInstance().getSchedulerMap();
+        if (schedulerMap != null) {
+            for (JobScheduleController jobScheduleController : schedulerMap.values()) {
+                jobScheduleController.shutdown();
+            }
+        }
+    }
+
     private Scheduler initializeScheduler(final String jobName) throws SchedulerException {
         StdSchedulerFactory factory = new StdSchedulerFactory();
         factory.initialize(getBaseQuartzProperties(jobName));
