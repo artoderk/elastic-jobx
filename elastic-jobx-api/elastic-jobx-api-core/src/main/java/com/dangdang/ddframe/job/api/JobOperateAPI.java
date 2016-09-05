@@ -27,7 +27,17 @@ import java.util.Collection;
  * @author zhangliang
  */
 public interface JobOperateAPI {
-    
+
+    /**
+     * 作业立刻执行.
+     *
+     * <p>作业在不与上次运行中作业冲突的情况下才会启动, 并在启动后自动清理此标记.</p>
+     *
+     * @param jobName 作业名称
+     * @param serverIp 作业服务器IP地址
+     */
+    void trigger(Optional<String> jobName, Optional<String> serverIp);
+
     /**
      * 作业暂停.
      * 

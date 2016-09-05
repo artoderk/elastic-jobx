@@ -10,6 +10,8 @@ $(function() {
     $('[href="#execution_info"]').click(function(event) {
         renderExecution();
     });
+    bindTriggerButtons();
+    bindTriggerAllButtons();
     bindPauseButtons();
     bindPauseAllButtons();
     bindResumeButtons();
@@ -95,6 +97,7 @@ function renderServers() {
                 var status = data[i].status;
                 var baseTd = "<td>" + data[i].ip + "</td><td>" + data[i].hostName + "</td><td>" + status + "</td><td>" + data[i].processSuccessCount + "</td><td>" + data[i].processFailureCount + "</td><td>" + data[i].sharding + "</td>";
                 var operationTd = "";
+                var triggerButton = "<button operation='trigger' class='btn btn-success' ip='" + data[i].ip + "'>触发</button>";
                 var resumeButton = "<button operation='resume' class='btn btn-success' ip='" + data[i].ip + "'>恢复</button>";
                 var pauseButton = "<button operation='pause' class='btn btn-warning' ip='" + data[i].ip + "'" + ">暂停</button>";
                 var shutdownButton = "<button operation='shutdown' class='btn btn-danger' ip='" + data[i].ip + "'>关闭</button>";
@@ -104,7 +107,7 @@ function renderServers() {
                 if ("PAUSED" === status) {
                     operationTd = resumeButton + "&nbsp;";
                 } else if ("DISABLED" !== status && "CRASHED" !== status && "SHUTDOWN" !== status) {
-                    operationTd = pauseButton + "&nbsp;";
+                    operationTd = triggerButton + "&nbsp;" + pauseButton + "&nbsp;";
                 }
                 if ("SHUTDOWN" !== status) {
                     operationTd = operationTd + shutdownButton + "&nbsp;";
@@ -131,6 +134,26 @@ function renderServers() {
                 $("#servers tbody").append("<tr class='" + trClass + "'>" + baseTd + operationTd + "</tr>");
             }
         }
+    });
+}
+
+function bindTriggerButtons() {
+    $(document).on("click", "button[operation='trigger'][data-toggle!='modal']", function(event) {
+        var jobName = $("#job-name").text();
+        $.post("job/trigger", {jobName : jobName, ip : $(event.currentTarget).attr("ip")}, function (data) {
+            renderServers();
+            showSuccessDialog();
+        });
+    });
+}
+
+function bindTriggerAllButtons() {
+    $(document).on("click", "#trigger-all-jobs-btn", function(event) {
+        var jobName = $("#job-name").text();
+        $.post("job/triggerAll/name", {jobName : jobName}, function (data) {
+            renderServers();
+            showSuccessDialog();
+        });
     });
 }
 

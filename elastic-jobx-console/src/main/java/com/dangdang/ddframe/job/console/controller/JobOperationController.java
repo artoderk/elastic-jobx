@@ -32,7 +32,12 @@ public class JobOperationController {
     
     @Resource
     private JobAPIService jobAPIService;
-    
+
+    @RequestMapping(value = "trigger", method = RequestMethod.POST)
+    public void triggerJob(final ServerInfo jobServer) {
+        jobAPIService.getJobOperatorAPI().trigger(Optional.of(jobServer.getJobName()), Optional.of(jobServer.getIp()));
+    }
+
     @RequestMapping(value = "pause", method = RequestMethod.POST)
     public void pauseJob(final ServerInfo jobServer) {
         jobAPIService.getJobOperatorAPI().pause(Optional.of(jobServer.getJobName()), Optional.of(jobServer.getIp()));
@@ -42,7 +47,12 @@ public class JobOperationController {
     public void resumeJob(final ServerInfo jobServer) {
         jobAPIService.getJobOperatorAPI().resume(Optional.of(jobServer.getJobName()), Optional.of(jobServer.getIp()));
     }
-    
+
+    @RequestMapping(value = "triggerAll/name", method = RequestMethod.POST)
+    public void triggerAllJobsByJobName(final ServerInfo jobServer) {
+        jobAPIService.getJobOperatorAPI().trigger(Optional.of(jobServer.getJobName()), Optional.<String>absent());
+    }
+
     @RequestMapping(value = "pauseAll/name", method = RequestMethod.POST)
     public void pauseAllJobsByJobName(final ServerInfo jobServer) {
         jobAPIService.getJobOperatorAPI().pause(Optional.of(jobServer.getJobName()), Optional.<String>absent());

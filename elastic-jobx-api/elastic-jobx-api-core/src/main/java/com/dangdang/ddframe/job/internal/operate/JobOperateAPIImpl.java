@@ -39,7 +39,19 @@ public final class JobOperateAPIImpl implements JobOperateAPI {
         this.registryCenter = registryCenter;
         jobOperatorTemplate = new JobOperateTemplate(registryCenter);
     }
-    
+
+    @Override
+    public void trigger(final Optional<String> jobName, final Optional<String> serverIp) {
+        jobOperatorTemplate.operate(jobName, serverIp, new JobOperateCallback() {
+
+            @Override
+            public boolean doOperate(final String jobName, final String serverIp) {
+                registryCenter.persist(new JobNodePath(jobName).getServerNodePath(serverIp, JobNodePath.TRIGGER_NODE), "");
+                return true;
+            }
+        });
+    }
+
     @Override
     public void pause(final Optional<String> jobName, final Optional<String> serverIp) {
         jobOperatorTemplate.operate(jobName, serverIp, new JobOperateCallback() {

@@ -93,19 +93,33 @@ public final class JobNodeStorageTest {
         assertThat(jobNodeStorage.getJobNodeChildrenKeys("servers"), is(Arrays.asList("host0", "host1")));
         verify(coordinatorRegistryCenter).getChildrenKeys("/testJob/servers");
     }
-    
+
     @Test
     public void assertCreateJobNodeIfNeeded() {
+        when(coordinatorRegistryCenter.isExisted("/testJob")).thenReturn(true);
         when(coordinatorRegistryCenter.isExisted("/testJob/config")).thenReturn(false);
         jobNodeStorage.createJobNodeIfNeeded("config");
+        verify(coordinatorRegistryCenter).isExisted("/testJob");
         verify(coordinatorRegistryCenter).isExisted("/testJob/config");
         verify(coordinatorRegistryCenter).persist("/testJob/config", "");
     }
-    
+
     @Test
-    public void assertCreateJobNodeIfNotNeeded() {
+    public void assertCreateJobNodeIfRootJobNodeIsNotExist() {
+        when(coordinatorRegistryCenter.isExisted("/testJob")).thenReturn(false);
         when(coordinatorRegistryCenter.isExisted("/testJob/config")).thenReturn(true);
         jobNodeStorage.createJobNodeIfNeeded("config");
+        verify(coordinatorRegistryCenter).isExisted("/testJob");
+        verify(coordinatorRegistryCenter, times(0)).isExisted("/testJob/config");
+        verify(coordinatorRegistryCenter, times(0)).persist("/testJob/config", "");
+    }
+
+    @Test
+    public void assertCreateJobNodeIfNotNeeded() {
+        when(coordinatorRegistryCenter.isExisted("/testJob")).thenReturn(true);
+        when(coordinatorRegistryCenter.isExisted("/testJob/config")).thenReturn(true);
+        jobNodeStorage.createJobNodeIfNeeded("config");
+        verify(coordinatorRegistryCenter).isExisted("/testJob");
         verify(coordinatorRegistryCenter).isExisted("/testJob/config");
         verify(coordinatorRegistryCenter, times(0)).persist("/testJob/config", "");
     }

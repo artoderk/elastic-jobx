@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * 选举主节点的服务.
  * 
  * @author zhangliang
+ * @author xiong.j
  */
 @Slf4j
 public class LeaderElectionService {
@@ -71,9 +72,16 @@ public class LeaderElectionService {
      */
     public Boolean isLeader() {
         String localHostIp = localHostService.getIp();
+        int i = 0;
         while (!hasLeader() && !serverService.getAvailableServers().isEmpty()) {
             log.info("Elastic job: leader node is electing, waiting for 100 ms at server '{}'", localHostIp);
             BlockUtils.waitingShortTime();
+
+            // 临时措施，避免单机节点无法选举
+            if ( i == 10) {
+                leaderElection();
+            }
+            i++;
         }
         return localHostIp.equals(jobNodeStorage.getJobNodeData(ElectionNode.LEADER_HOST));
     }

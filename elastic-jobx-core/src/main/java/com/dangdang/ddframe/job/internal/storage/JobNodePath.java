@@ -30,7 +30,12 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public final class JobNodePath {
-    
+
+    /**
+     * 作业立刻触发节点名称.
+     */
+    public static final String TRIGGER_NODE = "trigger";
+
     /**
      * 作业暂停节点名称.
      */

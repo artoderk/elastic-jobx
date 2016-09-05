@@ -104,6 +104,7 @@ public final class GuaranteeServiceTest {
     
     @Test
     public void testIsNotAllCompleted() {
+        when(configService.getShardingTotalCount()).thenReturn(10);
         when(jobNodeStorage.isJobNodeExisted("guarantee/completed")).thenReturn(true);
         when(jobNodeStorage.getJobNodeChildrenKeys("guarantee/completed")).thenReturn(Arrays.asList("0", "1"));
         assertFalse(guaranteeService.isAllCompleted());
