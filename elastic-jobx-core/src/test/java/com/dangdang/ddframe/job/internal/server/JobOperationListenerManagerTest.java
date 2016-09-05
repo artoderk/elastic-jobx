@@ -83,7 +83,7 @@ public final class JobOperationListenerManagerTest {
     public void assertStart() {
         jobOperationListenerManager.start();
         verify(jobNodeStorage).addConnectionStateListener(Matchers.<ConnectionLostListener>any());
-        verify(jobNodeStorage, times(2)).addDataListener(Matchers.<JobPausedStatusJobListener>any());
+        verify(jobNodeStorage, times(3)).addDataListener(Matchers.<JobPausedStatusJobListener>any());
     }
     
     @Test
