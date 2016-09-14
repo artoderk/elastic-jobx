@@ -80,7 +80,7 @@ public class GlobalConfigurationService {
      * @return 作业分片策略实现类
      */
     public String getJobShardingStrategy(String nodeName) {
-    	return globalNodeStorage.getJobNodeData(GlobalNodePath.getStrategyNodePath(nodeName));
+    	return globalNodeStorage.getNodeData(GlobalNodePath.getStrategyNodePath(nodeName));
     }
     
     /**
@@ -91,8 +91,8 @@ public class GlobalConfigurationService {
      */
     public boolean inSkipTime(Date now) {
     	// 全局跳过执行期间
-    	Date startDate = DateUtil.parseDate(globalNodeStorage.getJobNodeData(GlobalNodePath.SKIP_TIME_START));
-    	Date endDate   = DateUtil.parseDate(globalNodeStorage.getJobNodeData(GlobalNodePath.SKIP_TIME_END));
+    	Date startDate = DateUtil.parseDate(globalNodeStorage.getNodeData(GlobalNodePath.SKIP_TIME_START));
+    	Date endDate   = DateUtil.parseDate(globalNodeStorage.getNodeData(GlobalNodePath.SKIP_TIME_END));
 
     	return DateUtil.betweenDate(now, startDate, endDate);
     }

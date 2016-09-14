@@ -58,10 +58,19 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
      */
     public enum ExecutionStatus {
         
-        RUNNING, 
-        COMPLETED, 
-        PENDING;
-    
+        RUNNING(0, "running"),
+        COMPLETED(1, "completed"),
+        PENDING(2, "pending"),
+        FAILED(9, "pending");
+
+        private int    code;
+        private String memo;
+
+        ExecutionStatus(int code, String memo) {
+            this.code = code;
+            this.memo = memo;
+        }
+
         /**
          * 获取作业运行时状态.
          * 
@@ -77,6 +86,35 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
                 return COMPLETED;
             }
             return PENDING;
+        }
+
+        /**
+         * 获取作业运行时状态.
+         *
+         * @param isRunning 是否在运行
+         * @param isCompleted 是否运行完毕
+         * @param isFailed 是否运行失败
+         * @return 作业运行时状态
+         */
+        public static ExecutionStatus getExecutionStatus(final boolean isRunning, final boolean isCompleted, final boolean isFailed) {
+            if (isRunning) {
+                return RUNNING;
+            }
+            if (isCompleted) {
+                return COMPLETED;
+            }
+            if (isFailed) {
+                return FAILED;
+            }
+            return PENDING;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMemo() {
+            return memo;
         }
     }
 }

@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dangdang</groupId>
     <artifactId>elastic-jobx</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
     <description>Elastic-Jobx - distributed scheduled job solution</description>
@@ -13,6 +13,7 @@
         <module>elastic-jobx-api</module>
         <module>elastic-jobx-console</module>
         <module>elastic-jobx-example</module>
+        <module>TestWeb</module>
     </modules>
     
     <properties>
@@ -36,6 +37,10 @@
         <commons-codec.version>1.10</commons-codec.version>
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <groovy-all.version>2.4.6</groovy-all.version>
+        <postgresql.version>9.4.1207.jre7</postgresql.version>
+        <mybatis-spring.version>1.2.2</mybatis-spring.version>
+        <mybatis.version>3.2.8</mybatis.version>
+        <druid.version>1.0.20</druid.version>
         <javaee-web-api.version>7.0</javaee-web-api.version>
         
         <junit.version>4.12</junit.version>
@@ -129,6 +134,16 @@
                 <version>${springframework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -194,7 +209,28 @@
                 <artifactId>groovy-all</artifactId>
                 <version>${groovy-all.version}</version>
             </dependency>
-            
+            <!-- db driver -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-web-api</artifactId>

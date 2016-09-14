@@ -59,6 +59,11 @@ public final class GlobalNodePath {
      * 作业分片策略实现类节点名称.
      */
     public static final String STRATEGY = ROOT + "/strategy";
+
+    /**
+     * 是否记录历史执行信息.
+     */
+    public static final String HISTORY = CONFIG + "/history";
     
     /**
      * 获取作业分片策略实现类节点路径.

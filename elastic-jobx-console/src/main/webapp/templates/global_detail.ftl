@@ -29,6 +29,13 @@
 		            </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="triggerHistory" class="col-sm-2 control-label">记录历史执行信息</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" id="triggerHistory" name="triggerHistory" data-toggle="tooltip" data-placement="bottom" title="记录历史执行信息，此选项与具体[作业设置]中的[监控作业执行时状态]同时为true时生效" />
+                    </div>
+                </div>
+
                 <button type="reset" class="btn btn-inverse">重置</button>
                 <button type="submit" class="btn btn-primary">确定</button>
             </form>

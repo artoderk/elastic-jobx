@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.dangdang</groupId>
         <artifactId>elastic-jobx</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
     </parent>
     <artifactId>elastic-jobx-spring</artifactId>
     <name>${project.artifactId}</name>

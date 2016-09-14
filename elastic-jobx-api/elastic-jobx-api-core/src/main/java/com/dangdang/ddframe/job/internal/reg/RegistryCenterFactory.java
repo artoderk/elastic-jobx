@@ -17,6 +17,7 @@
 
 package com.dangdang.ddframe.job.internal.reg;
 
+import com.dangdang.ddframe.job.internal.storage.NamespaceNodeStorage;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperRegistryCenter;
@@ -28,18 +29,22 @@ import com.google.common.hash.Hashing;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 注册中心工厂.
  *
  * @author zhangliang
- * @author xiong.j support jdk1.6
+ * @author xiong.j
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RegistryCenterFactory {
+public final class RegistryCenterFactory extends Observable{
     
-    private static ConcurrentHashMap<HashCode, CoordinatorRegistryCenter> registryCenterMap = new ConcurrentHashMap<HashCode, CoordinatorRegistryCenter>(); 
+    private static ConcurrentHashMap<HashCode, CoordinatorRegistryCenter> registryCenterMap = new ConcurrentHashMap<HashCode, CoordinatorRegistryCenter>();
+
+    private static RegistryCenterFactory instance = new RegistryCenterFactory();
     
     /**
      * 创建注册中心.
@@ -50,21 +55,71 @@ public final class RegistryCenterFactory {
      * @return 注册中心对象
      */
     public static CoordinatorRegistryCenter createCoordinatorRegistryCenter(final String connectString, final String namespace, final Optional<String> digest) {
+        return instance.innerCreate(connectString, namespace, digest);
+    }
+
+    private CoordinatorRegistryCenter innerCreate(final String connectString, final String namespace, final Optional<String> digest){
+        HashCode hashCode = getHashCode(connectString, namespace, digest);
+        if (registryCenterMap.containsKey(hashCode)) {
+            return registryCenterMap.get(hashCode);
+        } else {
+            CoordinatorRegistryCenter result = null;
+            synchronized (RegistryCenterFactory.class){
+                if (registryCenterMap.containsKey(hashCode)) {
+                    return registryCenterMap.get(hashCode);
+                } else {
+                    ZookeeperConfiguration zkConfig = new ZookeeperConfiguration(connectString, namespace);
+                    if (digest.isPresent()) {
+                        zkConfig.setDigest(digest.get());
+                    }
+                    result = new ZookeeperRegistryCenter(zkConfig);
+                    result.init();
+                    registryCenterMap.putIfAbsent(hashCode, result);
+                }
+            }
+
+            // 监听
+            setChanged();
+            notifyObservers(result);
+
+            return result;
+        }
+    }
+
+    public static RegistryCenterFactory getInstance(){
+        return instance;
+    }
+
+    /**
+     * 关闭注册中心.
+     *
+     * @param connectString 注册中心连接字符串
+     * @param namespace 注册中心命名空间
+     * @param digest 注册中心凭证
+     */
+    public void destroy(final String connectString, final String namespace, final Optional<String> digest){
+        HashCode hashCode = getHashCode(connectString, namespace, digest);
+        if (registryCenterMap.containsKey(hashCode)) {
+            registryCenterMap.get(hashCode).close();
+        }
+    }
+
+    /**
+     * 关闭所有注册中心.
+     *
+     */
+    public void destroy(){
+        for (Map.Entry<HashCode, CoordinatorRegistryCenter> entry : registryCenterMap.entrySet()) {
+            entry.getValue().close();
+        }
+    }
+
+    private HashCode getHashCode(final String connectString, final String namespace, final Optional<String> digest) {
         Hasher hasher =  Hashing.md5().newHasher().putString(connectString, Charsets.UTF_8).putString(namespace, Charsets.UTF_8);
         if (digest.isPresent()) {
             hasher.putString(digest.get(), Charsets.UTF_8);
         }
         HashCode hashCode = hasher.hash();
-        if (registryCenterMap.containsKey(hashCode)) {
-            return registryCenterMap.get(hashCode);
-        }
-        ZookeeperConfiguration zkConfig = new ZookeeperConfiguration(connectString, namespace);
-        if (digest.isPresent()) {
-            zkConfig.setDigest(digest.get());
-        }
-        CoordinatorRegistryCenter result = new ZookeeperRegistryCenter(zkConfig);
-        result.init();
-        registryCenterMap.putIfAbsent(hashCode, result);
-        return result;
+        return hashCode;
     }
 }

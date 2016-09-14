@@ -15,33 +15,24 @@
  * </p>
  */
 
-package com.dangdang.ddframe.job.internal.storage.global;
+package com.dangdang.ddframe.job.internal.storage;
 
-import java.util.List;
-
+import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
+import lombok.RequiredArgsConstructor;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 import org.apache.curator.framework.state.ConnectionStateListener;
 
-import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
-
 /**
- * 全局配置数据访问类.
- * 
- * <p>
- * 全局配置节点是在注册中心节点的/global目录.
- * </p>
- * 
+ * 命名空间节点数据访问类.
+ *
  * @author xiong.j
  */
-public class GlobalNodeStorage {
+@RequiredArgsConstructor
+public class NamespaceNodeStorage {
 
     private final CoordinatorRegistryCenter coordinatorRegistryCenter;
-
-    public GlobalNodeStorage(final CoordinatorRegistryCenter coordinatorRegistryCenter) {
-        this.coordinatorRegistryCenter = coordinatorRegistryCenter;
-    }
 
     /**
      * 判断节点是否存在.
@@ -64,36 +55,10 @@ public class GlobalNodeStorage {
     }
 
     /**
-     * 直接从注册中心而非本地缓存获取节点数据.
-     *
-     * @param node 节点名称
-     * @return 节点数据值
-     */
-    public String getNodeDataDirectly(final String node) {
-        return coordinatorRegistryCenter.getDirectly(node);
-    }
-
-    /**
-     * 获取节点子节点名称列表.
-     *
-     * @param node 节点名称
-     * @return 节点子节点名称列表
-     */
-    public List<String> getNodeChildrenKeys(final String node) {
-        return coordinatorRegistryCenter.getChildrenKeys(node);
-    }
-
-    /**
      * 注册连接状态监听器.
-     *
-     * @param listener 监听器
      */
     public void addConnectionStateListener(final ConnectionStateListener listener) {
         getClient().getConnectionStateListenable().addListener(listener);
-    }
-
-    private CuratorFramework getClient() {
-        return (CuratorFramework) coordinatorRegistryCenter.getRawClient();
     }
 
     /**
@@ -102,8 +67,22 @@ public class GlobalNodeStorage {
      * @param listener 监听器
      */
     public void addDataListener(final TreeCacheListener listener) {
-        TreeCache cache = (TreeCache) coordinatorRegistryCenter.getRawCache(GlobalNodePath.ROOT);
+        TreeCache cache = (TreeCache) coordinatorRegistryCenter.getRawCache("/");
         cache.getListenable().addListener(listener);
     }
 
+    /**
+     * 移除数据监听器.
+     *
+     * @param listener 监听器
+     */
+    public void removeDataListener(final TreeCacheListener listener) {
+        TreeCache cache = (TreeCache) coordinatorRegistryCenter.getRawCache("/");
+        cache.getListenable().removeListener(listener);
+    }
+
+    private CuratorFramework getClient() {
+        return (CuratorFramework) coordinatorRegistryCenter.getRawClient();
+    }
+    
 }

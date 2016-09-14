@@ -44,6 +44,9 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
         GlobalConfig result = new GlobalConfig();
         result.setSkipTimeStart(registryCenter.get(GlobalNodePath.SKIP_TIME_START));
         result.setSkipTimeEnd(registryCenter.get(GlobalNodePath.SKIP_TIME_END));
+        if (registryCenter.isExisted(GlobalNodePath.HISTORY)) {
+            result.setTriggerHistory(Boolean.valueOf(registryCenter.get(GlobalNodePath.HISTORY)));
+        }
 		return result;
 	}
 
@@ -68,6 +71,7 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
 	public void updateGlobalConfigs(final GlobalConfig globalConfig) {
         fillNode(GlobalNodePath.SKIP_TIME_START, globalConfig.getSkipTimeStart());
         fillNode(GlobalNodePath.SKIP_TIME_END, globalConfig.getSkipTimeEnd());
+        fillNode(GlobalNodePath.HISTORY, globalConfig.isTriggerHistory());
 	}
 
 	@Override

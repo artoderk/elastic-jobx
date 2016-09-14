@@ -37,4 +37,6 @@ public final class GlobalConfig implements Serializable {
     
     private String skipTimeEnd;
 
+	private boolean triggerHistory = true;
+
 }

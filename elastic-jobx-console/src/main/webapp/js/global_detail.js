@@ -14,6 +14,7 @@ $(function() {
 
 function renderSettings() {
     $.get("global/configs", {}, function (data) {
+        $("#triggerHistory").attr("checked", data.triggerHistory);
         bindDatepicker(data.skipTimeStart, data.skipTimeEnd);
     });
 }
@@ -23,6 +24,7 @@ function bindSubmitJobSettingsForm() {
         event.preventDefault();
         var skipTimeStart = $("#skipTimeStart").val();
         var skipTimeEnd = $("#skipTimeEnd").val();
+        var triggerHistory = $("#triggerHistory").prop("checked");
         // Check
         if (skipTimeStart != "" && skipTimeEnd != "") {
             if (skipTimeStart == skipTimeEnd) {
@@ -30,7 +32,7 @@ function bindSubmitJobSettingsForm() {
                 return;
             }
         }
-        $.post("global/configs", {skipTimeStart: skipTimeStart, skipTimeEnd: skipTimeEnd}, function(data) {
+        $.post("global/configs", {skipTimeStart: skipTimeStart, skipTimeEnd: skipTimeEnd, triggerHistory: triggerHistory}, function(data) {
             showSuccessDialog();
         });
     });

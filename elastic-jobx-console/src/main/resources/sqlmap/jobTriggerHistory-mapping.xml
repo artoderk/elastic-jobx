@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dangdang.ddframe.job.console.repository.JobTriggerHistoryRepository" >
+
+  <resultMap type="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" id="jobTriggerHistory">
+    <id column="id" property="id" />
+    <result column="namespace" property="namespace" />
+    <result column="job_name" property="jobName" />
+    <result column="sharding_item" property="shardingItem" />
+    <result column="sharding_count" property="shardingCount" />
+    <result column="failover_ip" property="failoverIp" />
+    <result column="status" property="status" />
+    <result column="begin_time" property="beginTime" />
+    <result column="complete_time" property="completeTime" />
+    <result column="next_fire_time" property="nextFireTime" />
+  </resultMap>
+
+
+  <insert id="add" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
+    insert into job_trigger_history (namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time)
+    values (#{namespace}, #{jobName}, #{shardingItem}, #{shardingCount}, #{failoverIp},
+            #{status}, #{beginTime}, #{completeTime}, #{nextFireTime})
+  </insert>
+
+  <update id="update" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
+    update job_trigger_history set
+    <set>
+      <if test="failoverIp != null">
+        failover_ip = #{failoverIp},
+      </if>
+      <if test="status != -1">
+        status = #{status},
+      </if>
+      <if test="beginTime != null">
+        begin_time = #{beginTime},
+      </if>
+      <if test="completeTime != null">
+        complete_time = #{completeTime},
+      </if>
+      <if test="nextFireTime != null">
+        next_fire_time = #{nextFireTime},
+      </if>
+    </set>
+    where namespace = #{namespace} and job_name = #{jobName} and sharding_item = #{shardingItem} and begin_time = #{beginTime}
+  </update>
+
+  <update id="updateCompleteInfo" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
+      update job_trigger_history set complete_time = #{completeTime}, status = #{status}
+      where namespace = #{namespace} and job_name = #{jobName} and sharding_item = #{shardingItem} and begin_time = #{beginTime}
+      and complete_time is null
+  </update>
+
+  <select id="list" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" resultMap="jobTriggerHistory">
+    <![CDATA[
+      select id, namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time
+      from job_trigger_history
+      <where>
+        <if test="namespace != null">
+          and namespace = #{namespace}
+        </if>
+        <if test="jobName != null">
+          and job_name = #{jobName}
+        </if>
+        <if test="status != -1">
+          and status = #{status}
+        </if>
+        <if test="beginTime != null">
+          and begin_time <= #{beginTime}
+        </if>
+      </where>
+    ]]>
+  </select>
+
+  <select id="get" resultMap="jobTriggerHistory">
+    select id, namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time
+    from job_trigger_history
+    where namespace = #{namespace} and job_name = #{jobName}
+  </select>
+
+  <delete id="del" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
+    <![CDATA[
+      delete from job_trigger_history
+      <where>
+        <if test="namespace != null">
+          and namespace = #{namespace}
+        </if>
+        <if test="jobName != null">
+          and job_name = #{jobName}
+        </if>
+        <if test="status != -1">
+          and status = #{status}
+        </if>
+        <if test="beginTime != null">
+          and begin_time > #{beginTime}
+        </if>
+      </where>
+    ]]>
+  </delete>
+</mapper>

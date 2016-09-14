@@ -30,15 +30,21 @@ import com.dangdang.example.elasticjob.core.job.ThroughputDataFlowJobDemo;
 
 public final class JobMain {
     
-    private final ZookeeperConfiguration zkConfig = new ZookeeperConfiguration("localhost:2181", "elasticjob-local");
+    private final ZookeeperConfiguration zkConfig1 = new ZookeeperConfiguration("localhost:2181", "elasticjob-local");
     
-    private final CoordinatorRegistryCenter regCenter = new ZookeeperRegistryCenter(zkConfig);
+    private final CoordinatorRegistryCenter regCenter1 = new ZookeeperRegistryCenter(zkConfig1);
+
+    private final ZookeeperConfiguration zkConfig2 = new ZookeeperConfiguration("localhost:2181", "elasticjob-example");
+
+    private final CoordinatorRegistryCenter regCenter2 = new ZookeeperRegistryCenter(zkConfig2);
     
     private final JobConfiguration jobConfig1 = new JobConfiguration("simpleElasticDemoJob", SimpleJobDemo.class, 10, "0/5 * * * * ?");
     
     private final JobConfiguration jobConfig2 = new JobConfiguration("throughputDataFlowElasticDemoJob", ThroughputDataFlowJobDemo.class, 10, "0/5 * * * * ?");
     
     private final JobConfiguration jobConfig3 = new JobConfiguration("sequenceDataFlowElasticDemoJob", SequenceDataFlowJobDemo.class, 10, "0/5 * * * * ?");
+
+    private final JobConfiguration jobConfig4 = new JobConfiguration("SimpleJobDemo", SimpleJobDemo.class, 10, "0/5 * * * * ?");
     
     // CHECKSTYLE:OFF
     public static void main(final String[] args) {
@@ -49,8 +55,11 @@ public final class JobMain {
     public void init() {
 //        zkConfig.setNestedPort(4181);
 //        zkConfig.setNestedDataDir(String.format("target/test_zk_data/%s/", System.nanoTime()));
-        regCenter.init();
-        new JobScheduler(regCenter, jobConfig1, new SimpleDistributeOnceElasticJobListener()).init();
+        regCenter1.init();
+        new JobScheduler(regCenter1, jobConfig1, new SimpleDistributeOnceElasticJobListener()).init();
+
+        regCenter2.init();
+        new JobScheduler(regCenter2, jobConfig4, new SimpleDistributeOnceElasticJobListener()).init();
 //        new JobScheduler(regCenter, jobConfig2).init();
 //        new JobScheduler(regCenter, jobConfig3).init();
     }

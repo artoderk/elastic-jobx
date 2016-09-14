@@ -4,7 +4,7 @@
     <parent>
         <artifactId>elastic-jobx-api</artifactId>
         <groupId>com.dangdang</groupId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
     </parent>
     <artifactId>elastic-jobx-api-core</artifactId>
     <name>${project.artifactId}</name>
