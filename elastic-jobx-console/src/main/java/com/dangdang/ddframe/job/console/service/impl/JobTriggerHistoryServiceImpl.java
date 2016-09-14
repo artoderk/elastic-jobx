@@ -49,6 +49,7 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
     @Override
     public List<JobTriggerHistory> list(JobTriggerHistory jobTriggerHistory) {
         if (jobTriggerHistory != null) {
+            // TODO 分页
             List<JobTriggerHistory> list = repository.list(jobTriggerHistory);
             if (list != null && list.size() > 0) {
                 for (JobTriggerHistory history : list) {

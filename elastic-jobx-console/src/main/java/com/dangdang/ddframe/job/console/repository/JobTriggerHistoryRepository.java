@@ -32,6 +32,12 @@ public interface JobTriggerHistoryRepository {
     int updateCompleteInfo(JobTriggerHistory jobTriggerHistory);
 
     /**
+     * 统计作业执行记录
+     * @param jobTriggerHistory
+     * @return
+     */
+    int count(JobTriggerHistory jobTriggerHistory);
+    /**
      * 获取作业执行记录列表
      * @param jobTriggerHistory
      * @return

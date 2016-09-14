@@ -119,19 +119,20 @@ public class ConsoleRegistryCenter {
      * 选举Leader
      *
      * @param listener
-     * @throws Exception
      */
-    public void startLeaderElect(LeaderLatchListener listener) throws Exception {
-        try {
-            leaderLatch = new LeaderLatch((CuratorFramework)registryCenter.getRawClient(), "/latch");
-            leaderLatch.addListener(listener);
-            leaderLatch.start();
-            leaderLatch.await();
-        } catch (Exception e) {
-            log.error("Failed to elect a Leader!", e);
-            // TODO restart leaderElect
-            throw e;
-        }
+    public void startLeaderElect(LeaderLatchListener listener) {
+        boolean errFlag = true;
+        do {
+            try {
+                leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
+                leaderLatch.addListener(listener);
+                leaderLatch.start();
+                leaderLatch.await();
+            } catch (Exception e) {
+                log.error("Failed to elect a Leader! will retry", e);
+                errFlag = false;
+            }
+        } while (!errFlag);
     }
 
     /**
