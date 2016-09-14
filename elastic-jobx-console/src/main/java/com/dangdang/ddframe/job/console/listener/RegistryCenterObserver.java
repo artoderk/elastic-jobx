@@ -28,7 +28,7 @@ public class RegistryCenterObserver implements Observer {
      * @param arg 参数
      */
     @Override
-    public synchronized void update(Observable o, Object arg) {
+    public synchronized void update(final Observable o, final Object arg) {
         JobTriggerManager jobTriggerManager = new JobTriggerManager((CoordinatorRegistryCenter)arg, registryCenter, jobTriggerHistoryService);
         if (registryCenter.hasLeadership()) {
             jobTriggerManager.start();

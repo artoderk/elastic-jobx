@@ -12,6 +12,10 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * 管控平台注册中心
  *
@@ -24,6 +28,8 @@ public class ConsoleRegistryCenter {
     private CoordinatorRegistryCenter registryCenter;
 
     private LeaderLatch leaderLatch;
+
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     /**
      * 连接Zookeeper服务器的列表.
@@ -107,7 +113,7 @@ public class ConsoleRegistryCenter {
      * @param listener
      * @return
      */
-    public ConsoleRegistryCenter addConnectionLostListener(ConnectionLostListener listener) {
+    public ConsoleRegistryCenter addConnectionLostListener(final ConnectionLostListener listener) {
         if (listener != null) {
             getClient().getConnectionStateListenable().addListener(listener);
         }
@@ -116,23 +122,28 @@ public class ConsoleRegistryCenter {
     }
 
     /**
-     * 选举Leader
+     * 异步选举Leader
      *
      * @param listener
      */
-    public void startLeaderElect(LeaderLatchListener listener) {
-        boolean errFlag = true;
-        do {
-            try {
-                leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
-                leaderLatch.addListener(listener);
-                leaderLatch.start();
-                leaderLatch.await();
-            } catch (Exception e) {
-                log.error("Failed to elect a Leader! will retry", e);
-                errFlag = false;
+    public void startLeaderElect(final LeaderLatchListener listener) {
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                boolean errFlag = true;
+                do {
+                    try {
+                        leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
+                        leaderLatch.addListener(listener);
+                        leaderLatch.start();
+                        leaderLatch.await();
+                    } catch (Exception e) {
+                        log.error("Failed to elect a Leader! will retry", e);
+                        errFlag = false;
+                    }
+                } while (!errFlag);
             }
-        } while (!errFlag);
+        });
     }
 
     /**
