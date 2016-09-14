@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context" 
-    xsi:schemaLocation="http://www.springframework.org/schema/beans 
-                        http://www.springframework.org/schema/beans/spring-beans.xsd 
-                        http://www.springframework.org/schema/context 
-                        http://www.springframework.org/schema/context/spring-context.xsd 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd
                         ">
+
     <context:property-placeholder location="classpath:conf/config.properties" order="1" ignore-unresolvable="true"/>
 
     <context:component-scan base-package="com.dangdang.ddframe.job.console">
@@ -50,5 +57,16 @@
         <property name="mapperInterface" value="com.dangdang.ddframe.job.console.repository.JobTriggerHistoryRepository" />
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
+
+    <reg:zookeeper id="regCenter" serverLists="${job.serverLists}" namespace="${job.namespace}" baseSleepTimeMilliseconds="${job.baseSleepTimeMilliseconds}" maxSleepTimeMilliseconds="${job.maxSleepTimeMilliseconds}" maxRetries="${job.maxRetries}"/>
+
+    <job:bean id="jobTriggerHistoryClear" class="com.dangdang.ddframe.job.console.schedule.JobTriggerHistoryClear" regCenter="regCenter"
+              shardingTotalCount="${jobTriggerHistoryClear.shardingTotalCount}"
+              cron="${jobTriggerHistoryClear.cron}"
+              shardingItemParameters="${jobTriggerHistoryClear.shardingItemParameters}"
+              monitorExecution="${jobTriggerHistoryClear.monitorExecution}"
+              failover="${jobTriggerHistoryClear.failover}"
+              description="${jobTriggerHistoryClear.description}"
+    />
 
 </beans>

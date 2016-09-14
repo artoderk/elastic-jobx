@@ -91,7 +91,7 @@
         </if>
         <if test="beginTime != null">
           <![CDATA[
-            and begin_time > #{beginTime}
+            and begin_time < #{beginTime}
           ]]>
         </if>
       </where>
