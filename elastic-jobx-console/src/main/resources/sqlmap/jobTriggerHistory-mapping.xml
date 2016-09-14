@@ -51,7 +51,6 @@
   </update>
 
   <select id="list" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" resultMap="jobTriggerHistory">
-    <![CDATA[
       select id, namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time
       from job_trigger_history
       <where>
@@ -65,10 +64,11 @@
           and status = #{status}
         </if>
         <if test="beginTime != null">
-          and begin_time <= #{beginTime}
+          <![CDATA[
+            and begin_time <= #{beginTime}
+          ]]>
         </if>
       </where>
-    ]]>
   </select>
 
   <select id="get" resultMap="jobTriggerHistory">
@@ -78,7 +78,6 @@
   </select>
 
   <delete id="del" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
-    <![CDATA[
       delete from job_trigger_history
       <where>
         <if test="namespace != null">
@@ -91,9 +90,10 @@
           and status = #{status}
         </if>
         <if test="beginTime != null">
-          and begin_time > #{beginTime}
+          <![CDATA[
+            and begin_time > #{beginTime}
+          ]]>
         </if>
       </where>
-    ]]>
   </delete>
 </mapper>

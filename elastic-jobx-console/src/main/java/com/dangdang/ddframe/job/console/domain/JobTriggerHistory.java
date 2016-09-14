@@ -27,7 +27,9 @@ public class JobTriggerHistory {
 
     private String failoverIp;
 
-    private int status;
+    private int status = -1;
+
+    private String statusValue;
 
     private Timestamp beginTime;
 

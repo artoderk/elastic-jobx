@@ -2,7 +2,6 @@ package com.dangdang.ddframe.job.console.repository;
 
 import com.dangdang.ddframe.job.console.domain.JobTriggerHistory;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -45,7 +44,7 @@ public interface JobTriggerHistoryRepository {
      * @param jobName
      * @return
      */
-    JobTriggerHistory get(@Param("namespace")String namespace, @Param("jobName")String jobName);
+    List<JobTriggerHistory> get(@Param("namespace")String namespace, @Param("jobName")String jobName);
 
     /**
      * 删除作业执行记录

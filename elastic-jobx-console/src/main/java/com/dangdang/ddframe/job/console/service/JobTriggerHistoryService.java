@@ -50,6 +50,13 @@ public interface JobTriggerHistoryService {
     int update(CoordinatorRegistryCenter registryCenter, String path);
 
     /**
+     * 获取作业执行记录列表
+     * @param jobTriggerHistory
+     * @return
+     */
+    List<JobTriggerHistory> list(JobTriggerHistory jobTriggerHistory);
+
+    /**
      * 作业是否开始
      *
      * @param path

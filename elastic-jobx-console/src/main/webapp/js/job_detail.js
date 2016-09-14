@@ -10,6 +10,9 @@ $(function() {
     $('[href="#execution_info"]').click(function(event) {
         renderExecution();
     });
+    $('[href="#execution_history"]').click(function(event) {
+        renderHistory();
+    });
     bindTriggerButtons();
     bindTriggerAllButtons();
     bindPauseButtons();
@@ -41,6 +44,7 @@ function renderSettings() {
         $("#description").text(data.description);
         if (!data.monitorExecution) {
             $("#execution_info_tab").addClass("disabled");
+            $("#execution_history_tab").addClass("disabled");
         }
         bindDatepicker(data.skipStartTime, data.skipEndTime);
     });
@@ -78,8 +82,10 @@ function bindSubmitJobSettingsForm() {
             showSuccessDialog();
             if (monitorExecution) {
                 $("#execution_info_tab").removeClass("disabled");
+                $("#execution_history_tab").removeClass("disabled");
             } else {
                 $("#execution_info_tab").addClass("disabled");
+                $("#execution_history_tab").addClass("disabled");
             }
         });
     });
@@ -216,6 +222,29 @@ function renderExecution() {
                 trClass = "warning";
             }
             $("#execution tbody").append("<tr class='" + trClass + "'>" + baseTd + "</tr>");
+        }
+    });
+}
+
+function renderHistory() {
+    $.get("job/history", {jobName : $("#job-name").text()}, function (data) {
+        $("#history tbody").empty();
+        for (var i = 0;i < data.length;i++) {
+            var status = data[i].statusValue;
+            var failoverIp = null == data[i].failoverIp ? "-" : data[i].failoverIp;
+            var beginTime = null == data[i].beginTime ? null : new Date(data[i].beginTime).toLocaleString();
+            var completeTime = null == data[i].completeTime ? null : new Date(data[i].completeTime).toLocaleString();
+            var nextFireTime = null == data[i].nextFireTime ? null : new Date(data[i].nextFireTime).toLocaleString();
+            var baseTd = "<td>" + data[i].shardingCount + "</td><td>" + data[i].shardingItem + "</td><td>" + status + "</td><td>" + failoverIp + "</td><td>" + beginTime + "</td><td>" + completeTime + "</td><td>" + nextFireTime + "</td>";
+            var trClass = "";
+            if ("RUNNING" === status) {
+                trClass = "success";
+            } else if ("COMPLETED" === status) {
+                trClass = "info";
+            } else if ("PENDING" === status) {
+                trClass = "warning";
+            }
+            $("#history tbody").append("<tr class='" + trClass + "'>" + baseTd + "</tr>");
         }
     });
 }

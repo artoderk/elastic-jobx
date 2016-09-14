@@ -58,10 +58,10 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
      */
     public enum ExecutionStatus {
         
-        RUNNING(0, "running"),
-        COMPLETED(1, "completed"),
-        PENDING(2, "pending"),
-        FAILED(9, "pending");
+        RUNNING(0, "RUNNING"),
+        COMPLETED(1, "COMPLETED"),
+        PENDING(2, "PENDING"),
+        FAILED(9, "FAILED");
 
         private int    code;
         private String memo;
@@ -107,6 +107,16 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
                 return FAILED;
             }
             return PENDING;
+        }
+
+        public static ExecutionStatus getEnum(int code) {
+            for (ExecutionStatus item : values()) {
+                //不区分大小写
+                if (code == item.getCode()) {
+                    return item;
+                }
+            }
+            return null;
         }
 
         public int getCode() {

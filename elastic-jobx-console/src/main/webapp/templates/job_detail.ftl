@@ -5,6 +5,7 @@
         <li id="settings_tab" role="presentation" class="active"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">作业设置</a></li>
         <li id="servers_tab" role="presentation"><a href="#servers" aria-controls="servers" role="tab" data-toggle="tab">作业服务器</a></li>
         <li id="execution_info_tab" role="presentation"><a href="#execution_info" aria-controls="execution_info" role="tab" data-toggle="tab">作业运行状态</a></li>
+        <li id="execution_history_tab" role="presentation"><a href="#execution_history" aria-controls="execution_history" role="tab" data-toggle="tab">作业运行历史</a></li>
     </ul>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="settings">
@@ -144,6 +145,7 @@
             <button id="pause-all-jobs-btn" class="btn btn-warning">全部暂停</button>
             <button id="resume-all-jobs-btn" class="btn btn-success">全部恢复</button>
         </div>
+
         <div role="tabpanel" class="tab-pane" id="execution_info">
             <table id="execution" class="table table-hover">
                 <thead>
@@ -155,6 +157,24 @@
                         <th>上次作业完成时间</th>
                         <th>下次作业运行时间</th>
                     </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="execution_history">
+            <table id="history" class="table table-hover">
+                <thead>
+                <tr>
+                    <th>分片总数</th>
+                    <th>分片项</th>
+                    <th>状态</th>
+                    <th>失效转移执行</th>
+                    <th>作业开始时间</th>
+                    <th>作业完成时间</th>
+                    <th>下次作业运行时间</th>
+                </tr>
                 </thead>
                 <tbody>
                 </tbody>

@@ -7,7 +7,6 @@ import com.dangdang.ddframe.job.console.zookeeper.ConsoleRegistryCenter;
 import com.dangdang.ddframe.job.internal.reg.RegistryCenterFactory;
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

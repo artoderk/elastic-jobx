@@ -17,21 +17,24 @@
 
 package com.dangdang.ddframe.job.console.controller;
 
-import java.util.Collection;
-
-import javax.annotation.Resource;
-
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.dangdang.ddframe.job.console.domain.JobTriggerHistory;
+import com.dangdang.ddframe.job.console.domain.RegistryCenterConfiguration;
 import com.dangdang.ddframe.job.console.service.JobAPIService;
+import com.dangdang.ddframe.job.console.service.JobTriggerHistoryService;
+import com.dangdang.ddframe.job.console.util.SessionRegistryCenterConfiguration;
 import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import com.dangdang.ddframe.job.domain.JobBriefInfo;
 import com.dangdang.ddframe.job.domain.JobSettings;
 import com.dangdang.ddframe.job.domain.ServerInfo;
+import com.google.common.base.Strings;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("job")
@@ -39,6 +42,9 @@ public class JobController {
     
     @Resource
     private JobAPIService jobAPIService;
+
+    @Resource
+    private JobTriggerHistoryService jobTriggerHistoryService;
     
     @RequestMapping(value = "jobs", method = RequestMethod.GET)
     public Collection<JobBriefInfo> getAllJobsBriefInfo() {
@@ -64,6 +70,18 @@ public class JobController {
     @RequestMapping(value = "execution", method = RequestMethod.GET)
     public Collection<ExecutionInfo> getExecutionInfo(final JobSettings config) {
         return jobAPIService.getJobStatisticsAPI().getExecutionInfo(config.getJobName());
+    }
+
+    @RequestMapping(value = "history", method = RequestMethod.GET)
+    public Collection<JobTriggerHistory> getExecutionHistory(final JobSettings config) {
+        JobTriggerHistory jobTriggerHistory = new JobTriggerHistory();
+        RegistryCenterConfiguration regCenterConfig = SessionRegistryCenterConfiguration.getRegistryCenterConfiguration();
+        jobTriggerHistory.setJobName(config.getJobName());
+        jobTriggerHistory.setNamespace(regCenterConfig.getNamespace());
+        if (Strings.isNullOrEmpty(jobTriggerHistory.getJobName()) || Strings.isNullOrEmpty(jobTriggerHistory.getNamespace())) {
+            return null;
+        }
+        return jobTriggerHistoryService.list(jobTriggerHistory);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
