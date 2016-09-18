@@ -58,6 +58,24 @@ public final class RegistryCenterFactory extends Observable{
         return instance.innerCreate(connectString, namespace, digest);
     }
 
+    /**
+     * 获取注册中心工厂实例.
+     *
+     * @return 注册中心工厂实例
+     */
+    public static RegistryCenterFactory getInstance(){
+        return instance;
+    }
+
+    /**
+     * 关闭所有注册中心.
+     */
+    public void destroy(){
+        for (Map.Entry<HashCode, CoordinatorRegistryCenter> entry : registryCenterMap.entrySet()) {
+            entry.getValue().close();
+        }
+    }
+
     private CoordinatorRegistryCenter innerCreate(final String connectString, final String namespace, final Optional<String> digest){
         HashCode hashCode = getHashCode(connectString, namespace, digest);
         if (registryCenterMap.containsKey(hashCode)) {
@@ -83,34 +101,6 @@ public final class RegistryCenterFactory extends Observable{
             notifyObservers(result);
 
             return result;
-        }
-    }
-
-    public static RegistryCenterFactory getInstance(){
-        return instance;
-    }
-
-    /**
-     * 关闭注册中心.
-     *
-     * @param connectString 注册中心连接字符串
-     * @param namespace 注册中心命名空间
-     * @param digest 注册中心凭证
-     */
-    public void destroy(final String connectString, final String namespace, final Optional<String> digest){
-        HashCode hashCode = getHashCode(connectString, namespace, digest);
-        if (registryCenterMap.containsKey(hashCode)) {
-            registryCenterMap.get(hashCode).close();
-        }
-    }
-
-    /**
-     * 关闭所有注册中心.
-     *
-     */
-    public void destroy(){
-        for (Map.Entry<HashCode, CoordinatorRegistryCenter> entry : registryCenterMap.entrySet()) {
-            entry.getValue().close();
         }
     }
 

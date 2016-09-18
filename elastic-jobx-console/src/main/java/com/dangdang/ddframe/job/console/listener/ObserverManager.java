@@ -52,6 +52,7 @@ public class ObserverManager{
         log.info("Destroy ObserverManager.");
         RegistryCenterFactory.getInstance().deleteObservers();
         RegistryCenterFactory.getInstance().destroy();
+        registryCenter.close();
     }
 
     private void startRegistryCenter() throws Exception {

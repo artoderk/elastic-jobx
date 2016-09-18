@@ -68,11 +68,11 @@
           and begin_time <= #{beginTime}
         ]]>
       </if>
-      <if test="id != -1">
+      <!--<if test="id != -1">
         <![CDATA[
           id > #{id} limit #{limit}
         ]]>
-      </if>
+      </if>-->
     </where>
     order by job_name, begin_time DESC
   </select>

@@ -28,7 +28,7 @@ public class ConsoleRegistryCenter {
 
     private LeaderLatch leaderLatch;
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     /**
      * 连接Zookeeper服务器的列表.
@@ -121,7 +121,7 @@ public class ConsoleRegistryCenter {
     }
 
     /**
-     * 异步选举Leader
+     * 异步选主，只能启动一次
      *
      * @param listener
      */
@@ -130,10 +130,10 @@ public class ConsoleRegistryCenter {
             @Override
             public void run() {
                 boolean errFlag = true;
+                leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
+                leaderLatch.addListener(listener);
                 do {
                     try {
-                        leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
-                        leaderLatch.addListener(listener);
                         leaderLatch.start();
                         leaderLatch.await();
                     } catch (Exception e) {
@@ -161,6 +161,14 @@ public class ConsoleRegistryCenter {
      */
     public CuratorFramework getClient() {
         return (CuratorFramework) registryCenter.getRawClient();
+    }
+
+    /**
+     * 关闭注册中心
+     */
+    public void close() {
+        registryCenter.close();
+        executor.shutdown();
     }
 
     private ZookeeperConfiguration getConfig(){

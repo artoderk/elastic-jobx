@@ -37,9 +37,9 @@ public class JobTriggerHistory {
 
     private Timestamp nextFireTime;
 
-    private long limit = -1;
-
-    private int pageCount = -1;
-
-    private int pageIndex = -1;
+//    private long limit = -1;
+//
+//    private int pageCount = -1;
+//
+//    private int pageIndex = -1;
 }
