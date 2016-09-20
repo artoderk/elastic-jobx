@@ -76,7 +76,7 @@ function bindSubmitRegCenterForm() {
         var digest = $("#digest").val();
         $.post("registry_center", {name: name, zkAddressList: zkAddressList, namespace: namespace, digest: digest}, function(data) {
             $("#add-reg-center").modal("hide");
-            if (data) {
+            if (data == 0) {
                 var baseTd = "<td>" + name + "</td><td>" + zkAddressList + "</td><td>" + namespace + "</td><td>" + digest + "</td>";
                 var operationTd;
                 if (name != $("#activated-reg-center").text()) {
@@ -88,8 +88,10 @@ function bindSubmitRegCenterForm() {
                 $("#regCenters tbody").append("<tr>" + baseTd + operationTd + "</tr>");
                 showSuccessDialog();
                 renderRegistryCenterForDashboardNav();
+            } else if (data == 1) {
+                showFailureDialog("add-reg-center-failure-dialog1");
             } else {
-                showFailureDialog("add-reg-center-failure-dialog");
+                showFailureDialog("add-reg-center-failure-dialog2");
             }
         });
     });

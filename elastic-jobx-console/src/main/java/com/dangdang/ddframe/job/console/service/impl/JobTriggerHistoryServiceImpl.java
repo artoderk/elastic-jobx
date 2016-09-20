@@ -34,7 +34,7 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         try {
             return repository.add(jobTriggerHistory);
         } catch (DuplicateKeyException e) {
-            log.warn("Duplicate insert, ignoring it.", e);
+            log.warn("Duplicate insert, ignoring it. cause:" + e.getCause().getMessage());
         }
         return 0;
     }

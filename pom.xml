@@ -41,6 +41,7 @@
         <mybatis-spring.version>1.2.2</mybatis-spring.version>
         <mybatis.version>3.2.8</mybatis.version>
         <druid.version>1.0.20</druid.version>
+        <commons-net.version>3.5</commons-net.version>
         <javaee-web-api.version>7.0</javaee-web-api.version>
         
         <junit.version>4.12</junit.version>
@@ -229,6 +230,11 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid</artifactId>
                 <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
             </dependency>
 
             <dependency>
@@ -495,8 +501,8 @@
              -->
         </plugins>
     </build>
-    
-    <reporting>
+
+    <!--reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -571,9 +577,9 @@
                 </configuration>
             </plugin>
         </plugins>
-    </reporting>
-    
-    <repositories>
+    </reporting>-->
+
+    <!--<repositories>
         <repository>
             <id>alfresco-maven-repo</id>
             <url>https://maven.alfresco.com/nexus/content/groups/public/</url>
@@ -598,9 +604,9 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-    </repositories>
+    </repositories>-->
     
-    <url>https://github.com/dangdangdotcom/elastic-jobx</url>
+    <url>https://github.com/artoderk/elastic-jobx</url>
     <licenses> 
         <license>
             <name>Apache License 2.0</name>
@@ -614,41 +620,4 @@
         <developerConnection>scm:git:git@github.com:artoderk/elastic-jobx.git</developerConnection>
         <url>https://github.com/artoderk/elastic-jobx.git</url>
     </scm>
-    
-    <mailingLists>
-        <mailingList>
-            <name>ZhangLiang</name>
-            <post>zhangliang@dangdang.com</post>
-        </mailingList>
-         <mailingList>
-            <name>CaoHao</name>
-            <post>caohao@dangdang.com</post>
-        </mailingList>
-    </mailingLists>
-    
-    <developers>
-        <developer>
-            <id>zhangliang</id>
-            <name>ZhangLiang</name>
-            <email>zhangliang@dangdang.com</email>
-            <timezone>8</timezone>
-        </developer>
-        <developer>
-            <id>caohao</id>
-            <name>CaoHao</name>
-            <email>caohao@dangdang.com</email>
-            <timezone>8</timezone>
-        </developer>
-    </developers>
-    
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-releases</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-    </distributionManagement>
 </project>

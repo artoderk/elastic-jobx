@@ -50,7 +50,8 @@
 <@dashboard.successDialog "success-dialog" />
 <@dashboard.failureDialog "connect-reg-center-failure-dialog" "连接失败，请检查注册中心配置" />
 <@dashboard.confirmDialog "delete-confirm-dialog" "确认要删除吗？" />
-<@dashboard.failureDialog "add-reg-center-failure-dialog" "注册中心名称重复" />
+<@dashboard.failureDialog "add-reg-center-failure-dialog1" "注册中心名称重复" />
+<@dashboard.failureDialog "add-reg-center-failure-dialog2" "注册中心连接校验失败" />
 <script src="lib/jquery/jquery-2.1.4.min.js"></script>
 <script src="lib/bootstrap/js/bootstrap.min.js"></script>
 <script src="js/common.js"></script>
