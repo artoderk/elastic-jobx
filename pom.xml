@@ -13,7 +13,6 @@
         <module>elastic-jobx-api</module>
         <module>elastic-jobx-console</module>
         <module>elastic-jobx-example</module>
-        <module>TestWeb</module>
     </modules>
     
     <properties>

@@ -17,26 +17,6 @@
 
 package com.dangdang.ddframe.job.internal.execution;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Date;
-
-import com.dangdang.ddframe.job.internal.schedule.JobScheduleController;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.unitils.util.ReflectionUtils;
-
 import com.dangdang.ddframe.job.api.JobConfiguration;
 import com.dangdang.ddframe.job.api.JobExecutionMultipleShardingContext;
 import com.dangdang.ddframe.job.fixture.TestJob;
@@ -44,9 +24,24 @@ import com.dangdang.ddframe.job.internal.config.ConfigurationService;
 import com.dangdang.ddframe.job.internal.election.LeaderElectionService;
 import com.dangdang.ddframe.job.internal.env.LocalHostService;
 import com.dangdang.ddframe.job.internal.schedule.JobRegistry;
+import com.dangdang.ddframe.job.internal.schedule.JobScheduleController;
 import com.dangdang.ddframe.job.internal.server.ServerService;
 import com.dangdang.ddframe.job.internal.server.ServerStatus;
 import com.dangdang.ddframe.job.internal.storage.JobNodeStorage;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.unitils.util.ReflectionUtils;
+
+import java.util.Arrays;
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 public final class ExecutionServiceTest {
     
@@ -142,7 +137,7 @@ public final class ExecutionServiceTest {
     @Test
     public void assertRegisterJobCompletedWhenNotMonitorExecution() {
         when(configService.isMonitorExecution()).thenReturn(false);
-        executionService.registerJobCompleted(new JobExecutionMultipleShardingContext());
+        executionService.registerJobCompleted(new JobExecutionMultipleShardingContext(), true);
         verify(configService).isMonitorExecution();
         verify(serverService, times(0)).updateServerStatus(ServerStatus.READY);
     }
@@ -152,11 +147,14 @@ public final class ExecutionServiceTest {
         when(configService.isMonitorExecution()).thenReturn(true);
         JobExecutionMultipleShardingContext jobExecutionShardingContext = new JobExecutionMultipleShardingContext();
         jobExecutionShardingContext.setShardingItems(Arrays.asList(0, 1, 2));
-        executionService.registerJobCompleted(jobExecutionShardingContext);
+        executionService.registerJobCompleted(jobExecutionShardingContext, true);
         verify(serverService).updateServerStatus(ServerStatus.READY);
-        verify(jobNodeStorage).createJobNodeIfNeeded("execution/0/completed");
-        verify(jobNodeStorage).createJobNodeIfNeeded("execution/1/completed");
-        verify(jobNodeStorage).createJobNodeIfNeeded("execution/2/completed");
+//        verify(jobNodeStorage).createJobNodeIfNeeded("execution/0/completed");
+//        verify(jobNodeStorage).createJobNodeIfNeeded("execution/1/completed");
+//        verify(jobNodeStorage).createJobNodeIfNeeded("execution/2/completed");
+        verify(jobNodeStorage).replaceJobNode(eq("execution/0/completed"), anyBoolean());
+        verify(jobNodeStorage).replaceJobNode(eq("execution/1/completed"), anyBoolean());
+        verify(jobNodeStorage).replaceJobNode(eq("execution/2/completed"), anyBoolean());
         verify(jobNodeStorage).removeJobNodeIfExisted("execution/0/running");
         verify(jobNodeStorage).removeJobNodeIfExisted("execution/1/running");
         verify(jobNodeStorage).removeJobNodeIfExisted("execution/2/running");

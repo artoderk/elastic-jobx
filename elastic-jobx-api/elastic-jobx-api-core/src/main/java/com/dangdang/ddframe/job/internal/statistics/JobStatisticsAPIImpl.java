@@ -21,23 +21,19 @@ import com.dangdang.ddframe.job.api.JobStatisticsAPI;
 import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import com.dangdang.ddframe.job.domain.JobBriefInfo;
 import com.dangdang.ddframe.job.domain.ServerInfo;
-import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.job.internal.storage.JobNodePath;
+import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
-
+import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 作业状态展示的实现类.
  *
  * @author zhangliang
- * @author xiong.j support jdk1.6
+ * @author xiong.j
  */
 @RequiredArgsConstructor
 public final class JobStatisticsAPIImpl implements JobStatisticsAPI {
@@ -146,8 +142,12 @@ public final class JobStatisticsAPIImpl implements JobStatisticsAPI {
         result.setItem(Integer.parseInt(item));
         JobNodePath jobNodePath = new JobNodePath(jobName);
         boolean running = registryCenter.isExisted(jobNodePath.getExecutionNodePath(item, "running"));
-        boolean completed = registryCenter.isExisted(jobNodePath.getExecutionNodePath(item, "completed"));
-        result.setStatus(ExecutionInfo.ExecutionStatus.getExecutionStatus(running, completed));
+        boolean isCompletedNodeExisted = registryCenter.isExisted(jobNodePath.getExecutionNodePath(item, "completed"));
+        boolean completed = false;
+        if (isCompletedNodeExisted) {
+            completed = getCompleteFlag(jobNodePath, item);
+        }
+        result.setStatus(ExecutionInfo.ExecutionStatus.getExecutionStatus(running, completed, isCompletedNodeExisted));
         if (registryCenter.isExisted(jobNodePath.getExecutionNodePath(item, "failover"))) {
             result.setFailoverIp(registryCenter.get(jobNodePath.getExecutionNodePath(item, "failover")));
         }
@@ -158,5 +158,15 @@ public final class JobStatisticsAPIImpl implements JobStatisticsAPI {
         String lastCompleteTime = registryCenter.get(jobNodePath.getExecutionNodePath(item, "lastCompleteTime"));
         result.setLastCompleteTime(null == lastCompleteTime ? null : new Date(Long.parseLong(lastCompleteTime)));
         return result;
+    }
+
+    private boolean getCompleteFlag(final JobNodePath jobNodePath, final String item) {
+        String completeFlag = registryCenter.get(jobNodePath.getExecutionNodePath(item, "completed"));
+        if (Strings.isNullOrEmpty(completeFlag)) {
+            // 兼容老版本"/completed"无值的情况
+            return true;
+        } else {
+            return Boolean.valueOf(completeFlag);
+        }
     }
 }

@@ -73,7 +73,7 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         return path.endsWith("lastCompleteTime");
     }
 
-    private JobTriggerHistory getTriggerBeginInfo(CoordinatorRegistryCenter registryCenter, String path) {
+    private JobTriggerHistory getTriggerBeginInfo(final CoordinatorRegistryCenter registryCenter, String path) {
         path = path.substring(0, path.lastIndexOf("/"));
         JobTriggerHistory result = new JobTriggerHistory();
         setCommonItem(registryCenter, result, path);
@@ -86,20 +86,18 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         String nextFireTime = registryCenter.get(getFullPath(path, "/nextFireTime"));
         result.setNextFireTime(null == nextFireTime ? null : new Timestamp(Long.parseLong(nextFireTime)));
         if (registryCenter.isExisted(getFullPath(path, "/completed"))) {
-            // TODO 执行失败未处理
-            result.setStatus(ExecutionInfo.ExecutionStatus.COMPLETED.getCode());
+            result.setStatus(getCompleteFlag(registryCenter, path).getCode());
             String lastCompleteTime = registryCenter.get(getFullPath(path, "/lastCompleteTime"));
             result.setCompleteTime(null == lastCompleteTime ? null : new Timestamp(Long.parseLong(lastCompleteTime)));
         }
         return result;
     }
 
-    private JobTriggerHistory getTriggerCompleteInfo(CoordinatorRegistryCenter registryCenter, String path) {
+    private JobTriggerHistory getTriggerCompleteInfo(final CoordinatorRegistryCenter registryCenter, String path) {
         path = path.substring(0, path.lastIndexOf("/"));
         JobTriggerHistory result = new JobTriggerHistory();
         setCommonItem(registryCenter, result, path);
-        // TODO 执行失败未处理
-        result.setStatus(ExecutionInfo.ExecutionStatus.COMPLETED.getCode());
+        result.setStatus(getCompleteFlag(registryCenter, path).getCode());
         String lastBeginTime = registryCenter.get(getFullPath(path, "/lastBeginTime"));
         result.setBeginTime(null == lastBeginTime ? null : new Timestamp(Long.parseLong(lastBeginTime)));
         String lastCompleteTime = registryCenter.get(getFullPath(path, "/lastCompleteTime"));
@@ -115,11 +113,27 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         return result;
     }
 
-    private void setCommonItem(CoordinatorRegistryCenter registryCenter, JobTriggerHistory history, String path){
+    private void setCommonItem(final CoordinatorRegistryCenter registryCenter, JobTriggerHistory history, String path){
         history.setNamespace(((CuratorFramework)registryCenter.getRawClient()).getNamespace());
         String newPath = path.substring(1);
         history.setJobName(newPath.substring(0, newPath.indexOf("/")));
         history.setShardingItem(Integer.parseInt(path.substring(path.lastIndexOf("/") + 1)));
     }
 
+    private ExecutionInfo.ExecutionStatus getCompleteFlag(final CoordinatorRegistryCenter registryCenter, final String path) {
+        boolean completeFlag;
+        String completedPath = getFullPath(path, "/completed");
+        String completedValue = registryCenter.get(completedPath);
+        if (Strings.isNullOrEmpty(completedValue)) {
+            // 兼容老版本"/completed"无值的情况
+            completeFlag = true;
+        } else {
+            completeFlag = Boolean.valueOf(completedValue);
+        }
+        if (completeFlag) {
+            return ExecutionInfo.ExecutionStatus.COMPLETED;
+        } else {
+            return ExecutionInfo.ExecutionStatus.FAILED;
+        }
+    }
 }

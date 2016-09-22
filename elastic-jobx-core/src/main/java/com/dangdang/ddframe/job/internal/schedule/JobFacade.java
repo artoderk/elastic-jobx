@@ -17,9 +17,6 @@
 
 package com.dangdang.ddframe.job.internal.schedule;
 
-import java.util.Date;
-import java.util.List;
-
 import com.dangdang.ddframe.job.api.JobConfiguration;
 import com.dangdang.ddframe.job.api.JobExecutionMultipleShardingContext;
 import com.dangdang.ddframe.job.api.listener.ElasticJobListener;
@@ -32,6 +29,9 @@ import com.dangdang.ddframe.job.internal.offset.OffsetService;
 import com.dangdang.ddframe.job.internal.server.ServerService;
 import com.dangdang.ddframe.job.internal.sharding.ShardingService;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 为调度器提供内部服务的门面类.
@@ -123,9 +123,10 @@ public class JobFacade {
      * 注册作业完成信息.
      *
      * @param shardingContext 作业运行时分片上下文
+     * @param completeFlag 完成状态
      */
-    public void registerJobCompleted(final JobExecutionMultipleShardingContext shardingContext) {
-        executionService.registerJobCompleted(shardingContext);
+    public void registerJobCompleted(final JobExecutionMultipleShardingContext shardingContext, boolean completeFlag) {
+        executionService.registerJobCompleted(shardingContext, completeFlag);
         if (configService.isFailover()) {
             failoverService.updateFailoverComplete(shardingContext.getShardingItems());
         }

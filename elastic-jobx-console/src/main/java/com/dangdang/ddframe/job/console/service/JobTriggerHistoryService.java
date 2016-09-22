@@ -18,11 +18,8 @@
 package com.dangdang.ddframe.job.console.service;
 
 import com.dangdang.ddframe.job.console.domain.JobTriggerHistory;
-import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -35,40 +32,40 @@ public interface JobTriggerHistoryService {
     /**
      * 增加作业触发历史
      *
-     * @param registryCenter
-     * @param path
-     * @return
+     * @param registryCenter 注册中心
+     * @param path 路径
+     * @return 记录数
      */
     int add(CoordinatorRegistryCenter registryCenter, String path);
 
     /**
      * 修改作业触发历史
      *
-     * @param path
-     * @return
+     * @param path 路径
+     * @return 记录数
      */
     int update(CoordinatorRegistryCenter registryCenter, String path);
 
     /**
      * 获取作业执行记录列表
-     * @param jobTriggerHistory
-     * @return
+     * @param jobTriggerHistory 作业执行记录
+     * @return 作业执行记录列表
      */
     List<JobTriggerHistory> list(JobTriggerHistory jobTriggerHistory);
 
     /**
      * 作业是否开始
      *
-     * @param path
-     * @return
+     * @param path 作业路径
+     * @return 作业是否开始
      */
     boolean isBegin(String path);
 
     /**
      * 作业是否结束
      *
-     * @param path
-     * @return
+     * @param path 作业路径
+     * @return 作业是否结束
      */
     boolean isComplete(String path);
 }

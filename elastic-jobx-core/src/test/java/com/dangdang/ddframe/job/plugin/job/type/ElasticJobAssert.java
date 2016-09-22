@@ -27,6 +27,8 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +57,7 @@ public class ElasticJobAssert {
         verify(jobFacade).cleanPreviousExecutionInfo();
         verify(jobFacade).beforeJobExecuted(shardingContext);
         verify(jobFacade).registerJobBegin(shardingContext);
-        verify(jobFacade).registerJobCompleted(shardingContext);
+        verify(jobFacade).registerJobCompleted(eq(shardingContext), anyBoolean());
         verify(jobFacade).isExecuteMisfired(shardingContext.getShardingItems());
         verify(jobFacade).afterJobExecuted(shardingContext);
     }

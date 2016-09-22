@@ -218,7 +218,7 @@ function renderExecution() {
                 trClass = "success";
             } else if ("COMPLETED" === status) {
                 trClass = "info";
-            } else if ("PENDING" === status) {
+            } else if ("PENDING" === status || "FAILED" === status) {
                 trClass = "warning";
             }
             $("#execution tbody").append("<tr class='" + trClass + "'>" + baseTd + "</tr>");
@@ -241,7 +241,7 @@ function renderHistory() {
                 trClass = "success";
             } else if ("COMPLETED" === status) {
                 trClass = "info";
-            } else if ("PENDING" === status) {
+            } else if ("PENDING" === status || "FAILED" === status) {
                 trClass = "warning";
             }
             $("#history tbody").append("<tr class='" + trClass + "'>" + baseTd + "</tr>");

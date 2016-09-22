@@ -27,15 +27,19 @@ public final class ExecutionStatusTest {
     @Test
     public void assertGetExecutionStatusWhenIsRunning() {
         assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(true, false), is(ExecutionInfo.ExecutionStatus.RUNNING));
+        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(true, false, false), is(ExecutionInfo.ExecutionStatus.RUNNING));
+        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(true, false, true), is(ExecutionInfo.ExecutionStatus.RUNNING));
     }
     
     @Test
     public void assertGetExecutionStatusWhenIsCompleted() {
         assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(false, true), is(ExecutionInfo.ExecutionStatus.COMPLETED));
+        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(false, true, true), is(ExecutionInfo.ExecutionStatus.COMPLETED));
     }
     
     @Test
     public void assertGetExecutionStatusWhenIsPending() {
-        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(false, false), is(ExecutionInfo.ExecutionStatus.PENDING));
+        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(false, true, false), is(ExecutionInfo.ExecutionStatus.PENDING));
+        assertThat(ExecutionInfo.ExecutionStatus.getExecutionStatus(false, false, false), is(ExecutionInfo.ExecutionStatus.PENDING));
     }
 }

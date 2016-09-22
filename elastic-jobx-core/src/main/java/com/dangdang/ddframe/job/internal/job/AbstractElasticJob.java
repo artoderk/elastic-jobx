@@ -33,6 +33,7 @@ import com.dangdang.ddframe.job.internal.schedule.JobFacade;
  * 
  * @author zhangliang
  * @author caohao
+ * @author xiong.j
  */
 @Slf4j
 public abstract class AbstractElasticJob implements ElasticJob {
@@ -86,15 +87,17 @@ public abstract class AbstractElasticJob implements ElasticJob {
             return;
         }
         jobFacade.registerJobBegin(shardingContext);
+        boolean completeFlag = true;
         try {
             executeJob(shardingContext);
         //CHECKSTYLE:OFF
         } catch (final Throwable cause) {
         //CHECKSTYLE:ON
+            completeFlag = false; // 作业正常触发但执行异常
             handleJobExecutionException(new JobExecutionException(cause));
         } finally {
-            // TODO 考虑增加作业失败的状态，并且考虑如何处理作业失败的整体回路
-            jobFacade.registerJobCompleted(shardingContext);
+            // TODO 考虑如何处理作业失败的整体回路
+            jobFacade.registerJobCompleted(shardingContext, completeFlag);
         }
     }
     

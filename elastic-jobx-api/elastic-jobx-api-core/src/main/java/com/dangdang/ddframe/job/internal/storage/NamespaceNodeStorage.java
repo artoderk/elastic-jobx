@@ -56,6 +56,8 @@ public class NamespaceNodeStorage {
 
     /**
      * 注册连接状态监听器.
+     * 
+     * @param listener 监听器
      */
     public void addConnectionStateListener(final ConnectionStateListener listener) {
         getClient().getConnectionStateListenable().addListener(listener);

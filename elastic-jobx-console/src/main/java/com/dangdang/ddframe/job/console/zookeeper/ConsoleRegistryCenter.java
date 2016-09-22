@@ -89,7 +89,7 @@ public class ConsoleRegistryCenter {
     /**
      * 连接ZK
      *
-     * @return
+     * @return 注册中心实例
      * @throws Exception
      */
     public ConsoleRegistryCenter init() throws Exception {
@@ -109,8 +109,8 @@ public class ConsoleRegistryCenter {
     /**
      * 添加连接状态监听器
      *
-     * @param listener
-     * @return
+     * @param listener 连接状态监听器
+     * @return 注册中心实例
      */
     public ConsoleRegistryCenter addConnectionLostListener(final ConnectionLostListener listener) {
         if (listener != null) {
@@ -123,7 +123,7 @@ public class ConsoleRegistryCenter {
     /**
      * 异步选主，只能启动一次
      *
-     * @param listener
+     * @param listener 选主监听器
      */
     public void startLeaderElect(final LeaderLatchListener listener) {
         executor.submit(new Runnable() {
@@ -148,7 +148,7 @@ public class ConsoleRegistryCenter {
     /**
      * 是否Leader
      *
-     * @return
+     * @return 是否Leader
      */
     public boolean hasLeadership() {
         return leaderLatch != null ? leaderLatch.hasLeadership() : false;
@@ -157,7 +157,7 @@ public class ConsoleRegistryCenter {
     /**
      * 直接获取操作注册中心的原生客户端
      *
-     * @return
+     * @return 注册中心的原生客户端
      */
     public CuratorFramework getClient() {
         return (CuratorFramework) registryCenter.getRawClient();

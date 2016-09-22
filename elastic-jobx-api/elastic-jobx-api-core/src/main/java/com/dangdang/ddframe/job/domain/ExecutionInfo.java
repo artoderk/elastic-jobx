@@ -27,6 +27,7 @@ import java.util.Date;
  * 作业运行时信息对象.
  *
  * @author zhangliang
+ * @author xiong.j
  */
 @Getter
 @Setter
@@ -73,7 +74,7 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
 
         /**
          * 获取作业运行时状态.
-         * 
+         *
          * @param isRunning 是否在运行
          * @param isCompleted 是否运行完毕
          * @return 作业运行时状态
@@ -92,19 +93,19 @@ public final class ExecutionInfo implements Serializable, Comparable<ExecutionIn
          * 获取作业运行时状态.
          *
          * @param isRunning 是否在运行
-         * @param isCompleted 是否运行完毕
-         * @param isFailed 是否运行失败
+         * @param isCompleted 是否正常运行完毕
+         * @param isCompletedNodeExisted 运行完成结点是否存在
          * @return 作业运行时状态
          */
-        public static ExecutionStatus getExecutionStatus(final boolean isRunning, final boolean isCompleted, final boolean isFailed) {
+        public static ExecutionStatus getExecutionStatus(final boolean isRunning, final boolean isCompleted, final boolean isCompletedNodeExisted) {
             if (isRunning) {
                 return RUNNING;
-            }
-            if (isCompleted) {
-                return COMPLETED;
-            }
-            if (isFailed) {
-                return FAILED;
+            } else if (isCompletedNodeExisted) {
+                if (isCompleted) {
+                    return COMPLETED;
+                } else {
+                    return FAILED;
+                }
             }
             return PENDING;
         }

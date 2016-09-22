@@ -99,7 +99,7 @@ public final class SimpleElasticJobTest {
             verify(jobFacade).misfireIfNecessary(shardingContext.getShardingItems());
             verify(jobFacade).registerJobBegin(shardingContext);
             verify(jobCaller).process();
-            verify(jobFacade).registerJobCompleted(shardingContext);
+            verify(jobFacade).registerJobCompleted(shardingContext, false);
         }
     }
     
@@ -147,7 +147,7 @@ public final class SimpleElasticJobTest {
         verify(jobFacade).misfireIfNecessary(shardingContext.getShardingItems());
         verify(jobFacade, times(2)).registerJobBegin(shardingContext);
         verify(jobCaller, times(2)).process();
-        verify(jobFacade, times(2)).registerJobCompleted(shardingContext);
+        verify(jobFacade, times(2)).registerJobCompleted(shardingContext, true);
     }
     
     @Test(expected = JobExecutionException.class)

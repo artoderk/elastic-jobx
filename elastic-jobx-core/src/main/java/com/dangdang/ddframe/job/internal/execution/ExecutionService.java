@@ -128,14 +128,16 @@ public class ExecutionService {
      * 注册作业完成信息.
      * 
      * @param jobExecutionShardingContext 作业运行时分片上下文
+     * @param completeFlag 完成状态
      */
-    public void registerJobCompleted(final JobExecutionMultipleShardingContext jobExecutionShardingContext) {
+    public void registerJobCompleted(final JobExecutionMultipleShardingContext jobExecutionShardingContext, boolean completeFlag) {
         if (!configService.isMonitorExecution()) {
             return;
         }
         serverService.updateServerStatus(ServerStatus.READY);
         for (int each : jobExecutionShardingContext.getShardingItems()) {
-            jobNodeStorage.createJobNodeIfNeeded(ExecutionNode.getCompletedNode(each));
+//            jobNodeStorage.createJobNodeIfNeeded(ExecutionNode.getCompletedNode(each));
+            jobNodeStorage.replaceJobNode(ExecutionNode.getCompletedNode(each), completeFlag);
             jobNodeStorage.removeJobNodeIfExisted(ExecutionNode.getRunningNode(each));
             jobNodeStorage.replaceJobNode(ExecutionNode.getLastCompleteTimeNode(each), System.currentTimeMillis());
         }

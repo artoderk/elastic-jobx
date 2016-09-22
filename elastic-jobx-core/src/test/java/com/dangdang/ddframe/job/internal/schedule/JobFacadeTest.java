@@ -135,8 +135,8 @@ public class JobFacadeTest {
     public void testRegisterJobCompletedWhenFailoverDisabled() {
         JobExecutionMultipleShardingContext shardingContext = new JobExecutionMultipleShardingContext();
         when(configService.isFailover()).thenReturn(false);
-        jobFacade.registerJobCompleted(shardingContext);
-        verify(executionService).registerJobCompleted(shardingContext);
+        jobFacade.registerJobCompleted(shardingContext, true);
+        verify(executionService).registerJobCompleted(shardingContext, true);
         verify(failoverService, times(0)).updateFailoverComplete(shardingContext.getShardingItems());
     }
     
@@ -144,8 +144,8 @@ public class JobFacadeTest {
     public void testRegisterJobCompletedWhenFailoverEnabled() {
         JobExecutionMultipleShardingContext shardingContext = new JobExecutionMultipleShardingContext();
         when(configService.isFailover()).thenReturn(true);
-        jobFacade.registerJobCompleted(shardingContext);
-        verify(executionService).registerJobCompleted(shardingContext);
+        jobFacade.registerJobCompleted(shardingContext, true);
+        verify(executionService).registerJobCompleted(shardingContext, true);
         verify(failoverService).updateFailoverComplete(shardingContext.getShardingItems());
     }
     
