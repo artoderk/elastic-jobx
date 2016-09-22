@@ -53,7 +53,9 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
             List<JobTriggerHistory> list = repository.list(jobTriggerHistory);
             if (list != null && list.size() > 0) {
                 for (JobTriggerHistory history : list) {
-                    history.setStatusValue(ExecutionInfo.ExecutionStatus.getEnum(history.getStatus()).getMemo());
+                    if (history.getStatus() > -1) {
+                        history.setStatusValue(ExecutionInfo.ExecutionStatus.getEnum(history.getStatus()).getMemo());
+                    }
                 }
                 return list;
             }
