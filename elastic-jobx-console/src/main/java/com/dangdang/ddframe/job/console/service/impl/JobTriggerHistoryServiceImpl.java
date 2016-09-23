@@ -87,6 +87,7 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         result.setBeginTime(null == lastBeginTime ? null : new Timestamp(Long.parseLong(lastBeginTime)));
         String nextFireTime = registryCenter.get(getFullPath(path, "/nextFireTime"));
         result.setNextFireTime(null == nextFireTime ? null : new Timestamp(Long.parseLong(nextFireTime)));
+        result.setStatus(ExecutionInfo.ExecutionStatus.RUNNING.getCode());
         if (registryCenter.isExisted(getFullPath(path, "/completed"))) {
             result.setStatus(getCompleteFlag(registryCenter, path).getCode());
             String lastCompleteTime = registryCenter.get(getFullPath(path, "/lastCompleteTime"));
