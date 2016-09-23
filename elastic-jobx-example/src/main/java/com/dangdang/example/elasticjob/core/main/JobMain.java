@@ -44,7 +44,7 @@ public final class JobMain {
     
     private final JobConfiguration jobConfig3 = new JobConfiguration("sequenceDataFlowElasticDemoJob", SequenceDataFlowJobDemo.class, 10, "0/5 * * * * ?");
 
-    private final JobConfiguration jobConfig4 = new JobConfiguration("SimpleJobDemo", SimpleJobDemo.class, 10, "0/10 * * * * ?");
+    private final JobConfiguration jobConfig4 = new JobConfiguration("SimpleJobDemo", SimpleJobDemo.class, 10, "0/6 * * * * ?");
     
     // CHECKSTYLE:OFF
     public static void main(final String[] args) {
@@ -55,13 +55,14 @@ public final class JobMain {
     public void init() {
 //        zkConfig.setNestedPort(4181);
 //        zkConfig.setNestedDataDir(String.format("target/test_zk_data/%s/", System.nanoTime()));
-//        regCenter1.init();
-//        new JobScheduler(regCenter1, jobConfig1, new SimpleDistributeOnceElasticJobListener()).init();
+        regCenter1.init();
+        new JobScheduler(regCenter1, jobConfig1, new SimpleDistributeOnceElasticJobListener()).init();
 
         regCenter2.init();
         new JobScheduler(regCenter2, jobConfig4, new SimpleDistributeOnceElasticJobListener()).init();
-//        new JobScheduler(regCenter, jobConfig2).init();
-//        new JobScheduler(regCenter, jobConfig3).init();
+
+//        new JobScheduler(regCenter2, jobConfig2).init();
+//        new JobScheduler(regCenter2, jobConfig3).init();
     }
     
     class SimpleDistributeOnceElasticJobListener extends AbstractDistributeOnceElasticJobListener {

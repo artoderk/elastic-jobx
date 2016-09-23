@@ -22,17 +22,23 @@ import com.dangdang.ddframe.job.plugin.job.type.simple.AbstractSimpleElasticJob;
 import com.dangdang.example.elasticjob.fixture.repository.FooRepository;
 import com.dangdang.example.elasticjob.utils.PrintContext;
 
+import java.util.Random;
+
 public class SimpleJobDemo extends AbstractSimpleElasticJob {
     
     private PrintContext printContext = new PrintContext(SimpleJobDemo.class);
     
     private FooRepository fooRepository = new FooRepository();
+
+    private static Random random = new Random();
     
     @Override
     public void process(final JobExecutionMultipleShardingContext context) {
         printContext.printProcessJobMessage(context.getShardingItems());
         fooRepository.findActive(context.getShardingItems());
-        // int err = 1/ 0;
+        if (random.nextInt(100) == 50) {
+            int err = 1/ 0;
+        }
         // do something
     }
 }
