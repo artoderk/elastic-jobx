@@ -33,7 +33,7 @@ public class JobTriggerHistoryClear extends AbstractSimpleElasticJob {
         jobTriggerHistory.setBeginTime(getPrevDate(getShardingParam(context)));
 
         int count = jobTriggerHistoryRepository.del(jobTriggerHistory);
-        log.info("Clear table job_trigger_history count=" + count);
+        log.info("Clear record from table job_trigger_history succeed, count=" + count);
     }
 
     private int getShardingParam(JobExecutionMultipleShardingContext context) {
