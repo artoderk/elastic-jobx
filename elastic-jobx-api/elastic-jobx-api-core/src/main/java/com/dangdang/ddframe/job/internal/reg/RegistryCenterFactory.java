@@ -17,7 +17,6 @@
 
 package com.dangdang.ddframe.job.internal.reg;
 
-import com.dangdang.ddframe.job.internal.storage.NamespaceNodeStorage;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperRegistryCenter;
