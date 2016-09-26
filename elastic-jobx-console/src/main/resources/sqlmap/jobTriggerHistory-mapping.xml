@@ -54,10 +54,10 @@
     select id, namespace, job_name, sharding_item, sharding_count, server_ip, status, begin_time, complete_time, next_fire_time
     from job_trigger_history
     <where>
-      <if test="namespace != null">
+      <if test="namespace != null and namespace != ''">
         and namespace = #{namespace}
       </if>
-      <if test="jobName != null">
+      <if test="jobName != null and jobName != ''">
         and job_name = #{jobName}
       </if>
       <if test="status != -1">
