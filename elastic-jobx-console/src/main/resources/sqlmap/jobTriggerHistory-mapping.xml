@@ -8,7 +8,7 @@
     <result column="job_name" property="jobName" />
     <result column="sharding_item" property="shardingItem" />
     <result column="sharding_count" property="shardingCount" />
-    <result column="failover_ip" property="failoverIp" />
+    <result column="server_ip" property="serverIp" />
     <result column="status" property="status" />
     <result column="begin_time" property="beginTime" />
     <result column="complete_time" property="completeTime" />
@@ -17,16 +17,16 @@
 
 
   <insert id="add" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
-    insert into job_trigger_history (namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time)
-    values (#{namespace}, #{jobName}, #{shardingItem}, #{shardingCount}, #{failoverIp},
+    insert into job_trigger_history (namespace, job_name, sharding_item, sharding_count, server_ip, status, begin_time, complete_time, next_fire_time)
+    values (#{namespace}, #{jobName}, #{shardingItem}, #{shardingCount}, #{serverIp},
             #{status}, #{beginTime}, #{completeTime}, #{nextFireTime})
   </insert>
 
   <update id="update" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" >
     update job_trigger_history set
     <set>
-      <if test="failoverIp != null">
-        failover_ip = #{failoverIp},
+      <if test="serverIp != null">
+        server_ip = #{serverIp},
       </if>
       <if test="status != -1">
         status = #{status},
@@ -51,7 +51,7 @@
   </update>
 
   <select id="list" parameterType="com.dangdang.ddframe.job.console.domain.JobTriggerHistory" resultMap="jobTriggerHistory">
-    select id, namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time
+    select id, namespace, job_name, sharding_item, sharding_count, server_ip, status, begin_time, complete_time, next_fire_time
     from job_trigger_history
     <where>
       <if test="namespace != null">
@@ -74,7 +74,7 @@
         ]]>
       </if>-->
     </where>
-    order by job_name, begin_time DESC
+    order by namespace, job_name, sharding_item, begin_time DESC
   </select>
 
   <select id="count" parameterType="int" resultMap="jobTriggerHistory">
@@ -90,7 +90,7 @@
   </select>
 
   <select id="get" resultMap="jobTriggerHistory">
-    select id, namespace, job_name, sharding_item, sharding_count, failover_ip, status, begin_time, complete_time, next_fire_time
+    select id, namespace, job_name, sharding_item, sharding_count, server_ip, status, begin_time, complete_time, next_fire_time
     from job_trigger_history
     where namespace = #{namespace} and job_name = #{jobName}
   </select>

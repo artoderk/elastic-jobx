@@ -231,11 +231,11 @@ function renderHistory() {
         $("#history tbody").empty();
         for (var i = 0;i < data.length;i++) {
             var status = data[i].statusValue;
-            var failoverIp = null == data[i].failoverIp ? "-" : data[i].failoverIp;
+            var serverIp = null == data[i].serverIp ? "-" : data[i].serverIp;
             var beginTime = null == data[i].beginTime ? null : new Date(data[i].beginTime).toLocaleString();
             var completeTime = null == data[i].completeTime ? null : new Date(data[i].completeTime).toLocaleString();
             var nextFireTime = null == data[i].nextFireTime ? null : new Date(data[i].nextFireTime).toLocaleString();
-            var baseTd = "<td>" + data[i].shardingCount + "</td><td>" + data[i].shardingItem + "</td><td>" + status + "</td><td>" + failoverIp + "</td><td>" + beginTime + "</td><td>" + completeTime + "</td><td>" + nextFireTime + "</td>";
+            var baseTd = "<td>" + data[i].shardingCount + "</td><td>" + data[i].shardingItem + "</td><td>" + status + "</td><td>" + serverIp + "</td><td>" + beginTime + "</td><td>" + completeTime + "</td><td>" + nextFireTime + "</td>";
             var trClass = "";
             if ("RUNNING" === status) {
                 trClass = "success";

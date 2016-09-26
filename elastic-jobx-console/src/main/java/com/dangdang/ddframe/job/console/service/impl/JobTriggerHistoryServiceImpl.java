@@ -80,9 +80,7 @@ public final class JobTriggerHistoryServiceImpl implements JobTriggerHistoryServ
         JobTriggerHistory result = new JobTriggerHistory();
         setCommonItem(registryCenter, result, path);
         result.setShardingCount(Integer.parseInt(registryCenter.get(getFullPath("/", result.getJobName(), "/config", "/shardingTotalCount"))));
-        if (registryCenter.isExisted(getFullPath(path, "/failover"))) {
-            result.setFailoverIp(registryCenter.get(getFullPath(path, "/failover")));
-        }
+        result.setServerIp(registryCenter.get(getFullPath(path, "/serverIp")));
         String lastBeginTime = registryCenter.get(getFullPath(path, "/lastBeginTime"));
         result.setBeginTime(null == lastBeginTime ? null : new Timestamp(Long.parseLong(lastBeginTime)));
         String nextFireTime = registryCenter.get(getFullPath(path, "/nextFireTime"));

@@ -37,6 +37,8 @@ public final class ExecutionNode {
     static final String RUNNING = ROOT + "/%s/" + RUNNING_APPENDIX;
     
     static final String COMPLETED = ROOT + "/%s/completed";
+
+    static final String SERVER_IP = ROOT + "/%s/serverIp";
     
     static final String LAST_BEGIN_TIME = ROOT + "/%s/lastBeginTime";
     
@@ -71,7 +73,11 @@ public final class ExecutionNode {
     static String getCompletedNode(final int item) {
         return String.format(COMPLETED, item);
     }
-    
+
+    static String getServerIp(final int item) {
+        return String.format(SERVER_IP, item);
+    }
+
     static String getLastBeginTimeNode(final int item) {
         return String.format(LAST_BEGIN_TIME, item);
     }

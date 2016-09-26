@@ -1,6 +1,5 @@
 package com.dangdang.ddframe.job.console.domain;
 
-import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,7 +24,7 @@ public class JobTriggerHistory {
 
     private int shardingCount = -1;
 
-    private String failoverIp;
+    private String serverIp;
 
     private int status = -1;
 

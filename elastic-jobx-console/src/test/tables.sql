@@ -6,7 +6,7 @@ CREATE TABLE job_trigger_history
   job_name character varying(128),
   sharding_count character varying(64),
   sharding_item smallint,
-  failover_ip character varying(15),
+  server_ip character varying(15),
   status smallint,
   begin_time timestamp without time zone,
   complete_time timestamp without time zone,
