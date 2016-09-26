@@ -80,10 +80,10 @@
   <select id="count" parameterType="int" resultMap="jobTriggerHistory">
     select count(id) from job_trigger_history
     <where>
-      <if test="namespace != null">
+      <if test="namespace != null and namespace != ''">
         and namespace = #{namespace}
       </if>
-      <if test="jobName != null">
+      <if test="jobName != null and jobName != ''">
         and job_name = #{jobName}
       </if>
     </where>
