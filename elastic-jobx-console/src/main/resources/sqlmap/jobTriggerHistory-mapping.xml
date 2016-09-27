@@ -74,7 +74,7 @@
         ]]>
       </if>-->
     </where>
-    order by namespace, job_name, begin_time DESC
+    order by namespace, job_name, begin_time DESC, sharding_item
   </select>
 
   <select id="count" parameterType="int" resultMap="jobTriggerHistory">
