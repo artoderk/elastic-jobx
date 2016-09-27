@@ -51,12 +51,12 @@ public class RegistryCenterController {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public int add(final RegistryCenterConfiguration config, final HttpSession session) {
+    public int add(final RegistryCenterConfiguration config) {
         if (!validate(config)){
             return 2;  // 连接校验失败
         }
         if (registryCenterService.add(config)) {
-            setRegistryCenterNameToSession(registryCenterService.load(config.getName()), session);
+            RegistryCenterFactory.createCoordinatorRegistryCenter(config.getZkAddressList(), config.getNamespace(), Optional.fromNullable(config.getDigest()));
             return 0;  // 添加成功
         }
         return 1;  // 添加失败
