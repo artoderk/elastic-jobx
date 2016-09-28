@@ -45,7 +45,8 @@ public final class JobStatisticsAPIImpl implements JobStatisticsAPI {
         List<String> jobNames = registryCenter.getChildrenKeys("/");
         List<JobBriefInfo> result = new ArrayList<JobBriefInfo>(jobNames.size());
         for (String each : jobNames) {
-        	if (each.equals(GlobalNodePath.GLOBAL)) {
+            // 去除全局配置和锁
+        	if (each.equals(GlobalNodePath.GLOBAL) || each.equals("latch")) {
         		continue;
         	}
             JobNodePath jobNodePath = new JobNodePath(each);

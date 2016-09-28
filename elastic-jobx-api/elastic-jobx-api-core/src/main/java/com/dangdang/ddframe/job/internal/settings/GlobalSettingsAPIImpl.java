@@ -17,17 +17,16 @@
 
 package com.dangdang.ddframe.job.internal.settings;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.RequiredArgsConstructor;
-
 import com.dangdang.ddframe.job.api.GlobalSettingsAPI;
 import com.dangdang.ddframe.job.domain.GlobalConfig;
 import com.dangdang.ddframe.job.domain.GlobalStrategy;
 import com.dangdang.ddframe.job.internal.storage.JobNodePath;
 import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 全局配置的实现类.
@@ -82,7 +81,8 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
 		if (result == 1) {
 			List<String> jobNames = registryCenter.getChildrenKeys("/");
 			for (String each : jobNames) {
-				if (each.equals(GlobalNodePath.GLOBAL)) {
+                // 去除全局配置和锁
+				if (each.equals(GlobalNodePath.GLOBAL) || each.equals("latch")) {
 					continue;
 				}
 				JobNodePath jobNodePath = new JobNodePath(each);
