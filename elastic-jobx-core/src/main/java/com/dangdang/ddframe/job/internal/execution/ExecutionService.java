@@ -75,18 +75,17 @@ public class ExecutionService {
             serverService.updateServerStatus(ServerStatus.RUNNING);
             for (int each : jobExecutionShardingContext.getShardingItems()) {
                 jobNodeStorage.fillEphemeralJobNode(ExecutionNode.getRunningNode(each), "");
-                jobNodeStorage.replaceJobNode(ExecutionNode.getLastBeginTimeNode(each), System.currentTimeMillis());
                 if (!localHostService.getIp().equals(jobNodeStorage.getJobNodeData(ExecutionNode.getServerIp(each)))) {
                     jobNodeStorage.replaceJobNode(ExecutionNode.getServerIp(each), localHostService.getIp());
                 }
                 JobScheduleController jobScheduleController = JobRegistry.getInstance().getJobScheduleController(jobConfiguration.getJobName());
-                if (null == jobScheduleController) {
-                    continue;
+                if (null != jobScheduleController) {
+                    Date nextFireTime = jobScheduleController.getNextFireTime();
+                    if (null != nextFireTime) {
+                        jobNodeStorage.replaceJobNode(ExecutionNode.getNextFireTimeNode(each), nextFireTime.getTime());
+                    }
                 }
-                Date nextFireTime = jobScheduleController.getNextFireTime();
-                if (null != nextFireTime) {
-                    jobNodeStorage.replaceJobNode(ExecutionNode.getNextFireTimeNode(each), nextFireTime.getTime());
-                }
+                jobNodeStorage.replaceJobNode(ExecutionNode.getLastBeginTimeNode(each), System.currentTimeMillis());
             }
         }
     }
