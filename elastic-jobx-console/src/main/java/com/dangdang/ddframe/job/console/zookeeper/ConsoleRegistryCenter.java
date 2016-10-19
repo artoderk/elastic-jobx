@@ -1,10 +1,13 @@
 package com.dangdang.ddframe.job.console.zookeeper;
 
+import com.dangdang.ddframe.job.internal.console.ConsoleNode;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.reg.zookeeper.ZookeeperRegistryCenter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.TreeCache;
+import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 import org.apache.curator.framework.recipes.leader.LeaderLatch;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.apache.curator.framework.state.ConnectionState;
@@ -107,6 +110,43 @@ public class ConsoleRegistryCenter {
     }
 
     /**
+     * 持久化临时注册数据.
+     *
+     * @param key 键
+     * @param value 值
+     */
+    public void persistEphemeral(final String key, final String value) {
+        registryCenter.persistEphemeral(key, value);
+    }
+
+    /**
+     * 删除作业节点.
+     *
+     * @param node 作业节点名称
+     */
+    public void removeNode(final String node) {
+        registryCenter.remove(node);
+    }
+
+    public ConsoleRegistryCenter addCacheData(final String cachePath) {
+        registryCenter.addCacheData(cachePath);
+
+        return this;
+    }
+
+    /**
+     * 注册数据监听器.
+     *
+     * @param listener 监听器
+     */
+    public ConsoleRegistryCenter addDataListener(final TreeCacheListener listener, final String cachePath) {
+        TreeCache cache = (TreeCache) registryCenter.getRawCache(cachePath);
+        cache.getListenable().addListener(listener);
+
+        return this;
+    }
+
+    /**
      * 添加连接状态监听器
      *
      * @param listener 连接状态监听器
@@ -130,7 +170,7 @@ public class ConsoleRegistryCenter {
             @Override
             public void run() {
                 boolean errFlag = true;
-                leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), "/latch");
+                leaderLatch = new LeaderLatch((CuratorFramework) registryCenter.getRawClient(), ConsoleNode.LATCH);
                 leaderLatch.addListener(listener);
                 do {
                     try {
@@ -169,6 +209,14 @@ public class ConsoleRegistryCenter {
     public void close() {
         registryCenter.close();
         executor.shutdown();
+    }
+
+    /**
+     * 是否初始化完成
+     * @return
+     */
+    public boolean isInitialized(){
+        return registryCenter != null ? true : false;
     }
 
     private ZookeeperConfiguration getConfig(){

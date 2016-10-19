@@ -64,12 +64,12 @@ public class RegistryCenterController {
     
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public void delete(final RegistryCenterConfiguration config) {
-        registryCenterService.delete(config.getName());
+        registryCenterService.delete(config.getNamespace());
     }
     
     @RequestMapping(value = "connect", method = RequestMethod.POST)
     public boolean connect(final RegistryCenterConfiguration config, final HttpSession session) {
-        return setRegistryCenterNameToSession(registryCenterService.load(config.getName()), session);
+        return setRegistryCenterNameToSession(registryCenterService.load(config.getNamespace()), session);
     }
     
     private boolean setRegistryCenterNameToSession(final RegistryCenterConfiguration regCenterConfig, final HttpSession session) {

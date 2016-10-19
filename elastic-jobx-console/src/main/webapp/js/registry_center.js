@@ -12,10 +12,10 @@ function renderRegCenters() {
             var baseTd = "<td>" + data[i].name + "</td><td>" + data[i].zkAddressList + "</td><td>" + data[i].namespace + "</td><td>" + data[i].digest + "</td>";
             var operationTd;
             if (true === data[i].activated) {
-                $("#activated-reg-center").text(data[i].name);
-                operationTd = "<td><button disabled operation='connect' class='btn' regName='" + data[i].name + "'>已连</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + data[i].name + "'>删除</button></td>";
+                $("#activated-reg-center").text(data[i].namespace);
+                operationTd = "<td><button disabled operation='connect' class='btn' regName='" + data[i].namespace + "'>已连</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + data[i].namespace + "'>删除</button></td>";
             } else {
-                operationTd = "<td><button operation='connect' class='btn btn-primary' regName='" + data[i].name + "' data-loading-text='切换中...'>连接</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + data[i].name + "'>删除</button></td>";
+                operationTd = "<td><button operation='connect' class='btn btn-primary' regName='" + data[i].namespace + "' data-loading-text='切换中...'>连接</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + data[i].namespace + "'>删除</button></td>";
             }
             $("#regCenters tbody").append("<tr>" + baseTd + operationTd + "</tr>");
         }
@@ -30,7 +30,7 @@ function bindConnectButtons() {
     	var btn = $(this).button("loading");
         var regName = $(event.currentTarget).attr("regName");
         var currentConnectBtn = $(event.currentTarget);
-        $.post("registry_center/connect", {name : regName}, function (data) {
+        $.post("registry_center/connect", {namespace : regName}, function (data) {
             if (data) {
                 $("#activated-reg-center").text(regName);
                 var connectButtons = $('button[operation="connect"]');
@@ -58,7 +58,7 @@ function bindDeleteButtons() {
         var tr = $(event.currentTarget).parent().parent();
         $(document).off("click", "#delete-confirm-dialog-confirm-btn");
         $(document).on("click", "#delete-confirm-dialog-confirm-btn", function(event) {
-            $.post("registry_center/delete", {name : regName}, function (data) {
+            $.post("registry_center/delete", {namespace : regName}, function (data) {
                 tr.empty();
                 $("#delete-confirm-dialog").modal("hide");
                 renderRegistryCenterForDashboardNav();
@@ -79,10 +79,10 @@ function bindSubmitRegCenterForm() {
             if (data == 0) {
                 var baseTd = "<td>" + name + "</td><td>" + zkAddressList + "</td><td>" + namespace + "</td><td>" + digest + "</td>";
                 var operationTd;
-                if (name != $("#activated-reg-center").text()) {
-                    operationTd = "<td><button operation='connect' class='btn btn-primary' regName='" + name + "'>连接</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + name + "'>删除</button></td>";
+                if (namespace != $("#activated-reg-center").text()) {
+                    operationTd = "<td><button operation='connect' class='btn btn-primary' regName='" + namespace + "'>连接</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + namespace + "'>删除</button></td>";
                 } else {
-                    operationTd = "<td><button disabled operation='connect' class='btn' regName='" + name + "'>已连</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + name + "'>删除</button></td>";
+                    operationTd = "<td><button disabled operation='connect' class='btn' regName='" + namespace + "'>已连</button><button operation='delete' class='btn btn-danger' data-toggle='modal' data-target='#delete-confirm-dialog' regName='" + namespace + "'>删除</button></td>";
                 }
                 
                 $("#regCenters tbody").append("<tr>" + baseTd + operationTd + "</tr>");

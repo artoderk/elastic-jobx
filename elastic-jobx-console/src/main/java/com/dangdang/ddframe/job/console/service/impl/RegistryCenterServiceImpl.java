@@ -39,16 +39,16 @@ public class RegistryCenterServiceImpl implements RegistryCenterService {
     }
     
     @Override
-    public RegistryCenterConfiguration load(final String name) {
+    public RegistryCenterConfiguration load(final String namespace) {
         RegistryCenterConfigurations configs = registryCenterConfigurationsXmlRepository.load();
-        RegistryCenterConfiguration result = findRegistryCenterConfiguration(name, configs);
+        RegistryCenterConfiguration result = findRegistryCenterConfiguration(namespace, configs);
         setActivated(configs, result);
         return result;
     }
     
-    private RegistryCenterConfiguration findRegistryCenterConfiguration(final String name, final RegistryCenterConfigurations configs) {
+    private RegistryCenterConfiguration findRegistryCenterConfiguration(final String namespace, final RegistryCenterConfigurations configs) {
         for (RegistryCenterConfiguration each : configs.getRegistryCenterConfiguration()) {
-            if (name.equals(each.getName())) {
+            if (namespace.equals(each.getNamespace())) {
                 return each;
             }
         }
@@ -96,9 +96,9 @@ public class RegistryCenterServiceImpl implements RegistryCenterService {
     }
     
     @Override
-    public void delete(final String name) {
+    public void delete(final String namespace) {
         RegistryCenterConfigurations configs = registryCenterConfigurationsXmlRepository.load();
-        if (configs.getRegistryCenterConfiguration().remove(new RegistryCenterConfiguration(name))) {
+        if (configs.getRegistryCenterConfiguration().remove(new RegistryCenterConfiguration(namespace))) {
             registryCenterConfigurationsXmlRepository.save(configs);
         }
     }

@@ -20,6 +20,7 @@ package com.dangdang.ddframe.job.internal.settings;
 import com.dangdang.ddframe.job.api.GlobalSettingsAPI;
 import com.dangdang.ddframe.job.domain.GlobalConfig;
 import com.dangdang.ddframe.job.domain.GlobalStrategy;
+import com.dangdang.ddframe.job.internal.console.ConsoleNode;
 import com.dangdang.ddframe.job.internal.storage.JobNodePath;
 import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
@@ -82,7 +83,7 @@ public final class GlobalSettingsAPIImpl implements GlobalSettingsAPI {
 			List<String> jobNames = registryCenter.getChildrenKeys("/");
 			for (String each : jobNames) {
                 // 去除全局配置和锁
-				if (each.equals(GlobalNodePath.GLOBAL) || each.equals("latch")) {
+				if (each.equals(GlobalNodePath.GLOBAL) || each.equals(ConsoleNode.ROOT)) {
 					continue;
 				}
 				JobNodePath jobNodePath = new JobNodePath(each);

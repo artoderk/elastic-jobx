@@ -4,9 +4,13 @@ import com.dangdang.ddframe.job.console.domain.RegistryCenterConfiguration;
 import com.dangdang.ddframe.job.console.service.JobTriggerHistoryService;
 import com.dangdang.ddframe.job.console.service.RegistryCenterService;
 import com.dangdang.ddframe.job.console.zookeeper.ConsoleRegistryCenter;
+import com.dangdang.ddframe.job.internal.console.ConsoleNode;
+import com.dangdang.ddframe.job.internal.listener.AbstractJobListener;
 import com.dangdang.ddframe.job.internal.reg.RegistryCenterFactory;
 import com.google.common.base.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.leader.LeaderLatchListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,7 +60,10 @@ public class ObserverManager{
     }
 
     private void startRegistryCenter() throws Exception {
-        registryCenter.init().startLeaderElect(new LeaderChangedLatchListener());
+        registryCenter.init()
+                .addCacheData(ConsoleNode.NAMESPACE)
+                .addDataListener(new NeedMonitorNamespaceListener(), ConsoleNode.NAMESPACE)
+                .startLeaderElect(new LeaderChangedLatchListener());
     }
 
     private ObserverManager startMonitor(){
@@ -67,10 +74,14 @@ public class ObserverManager{
         // 连接既有的命名空间
         Collection<RegistryCenterConfiguration> registryCenterConfigurations = registryCenterService.loadAll();
         for (RegistryCenterConfiguration configuration : registryCenterConfigurations) {
-            RegistryCenterFactory.createCoordinatorRegistryCenter(configuration.getZkAddressList(),
-                    configuration.getNamespace(), Optional.fromNullable(configuration.getDigest()));
+            createCoordinatorRegistryCenter(configuration);
         }
         return this;
+    }
+
+    private void createCoordinatorRegistryCenter(RegistryCenterConfiguration configuration) {
+        RegistryCenterFactory.createCoordinatorRegistryCenter(configuration.getZkAddressList(),
+                configuration.getNamespace(), Optional.fromNullable(configuration.getDigest()));
     }
 
     class LeaderChangedLatchListener implements LeaderLatchListener{
@@ -85,6 +96,22 @@ public class ObserverManager{
         public void notLeader() {
             log.info("###### Lost leadership. ######");
             registryCenterObserver.close();
+        }
+    }
+
+    class NeedMonitorNamespaceListener extends AbstractJobListener {
+
+        @Override
+        protected void dataChanged(final CuratorFramework client, final TreeCacheEvent event, final String path) {
+            if (registryCenter.hasLeadership()) {
+                if (TreeCacheEvent.Type.NODE_ADDED == event.getType() && path.startsWith(ConsoleNode.NAMESPACE)) {
+                    String namespace = path.substring(path.lastIndexOf("/") + 1);
+                    RegistryCenterConfiguration configuration = registryCenterService.load(namespace);
+                    createCoordinatorRegistryCenter(configuration);
+                    registryCenter.removeNode(path);
+                }
+            }
+
         }
     }
 }

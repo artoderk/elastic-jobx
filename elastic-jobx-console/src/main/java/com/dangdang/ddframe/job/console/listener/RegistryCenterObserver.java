@@ -2,6 +2,7 @@ package com.dangdang.ddframe.job.console.listener;
 
 import com.dangdang.ddframe.job.console.service.JobTriggerHistoryService;
 import com.dangdang.ddframe.job.console.zookeeper.ConsoleRegistryCenter;
+import com.dangdang.ddframe.job.internal.console.ConsoleNode;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,11 @@ public class RegistryCenterObserver implements Observer {
         JobTriggerManager jobTriggerManager = new JobTriggerManager((CoordinatorRegistryCenter)arg, registryCenter, jobTriggerHistoryService);
         if (registryCenter.hasLeadership()) {
             jobTriggerManager.start();
+        } else {
+            if (registryCenter.isInitialized()) {
+                // 初始化之后，通过后管新增的namespace通过ZK让leader启动监听
+                registryCenter.persistEphemeral(ConsoleNode.getFullNamespacePath(jobTriggerManager.getNamespace()), "");
+            }
         }
         queue.add(jobTriggerManager);
     }

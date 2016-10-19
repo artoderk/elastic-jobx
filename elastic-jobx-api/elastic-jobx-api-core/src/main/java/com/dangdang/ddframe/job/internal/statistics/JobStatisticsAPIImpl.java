@@ -21,6 +21,7 @@ import com.dangdang.ddframe.job.api.JobStatisticsAPI;
 import com.dangdang.ddframe.job.domain.ExecutionInfo;
 import com.dangdang.ddframe.job.domain.JobBriefInfo;
 import com.dangdang.ddframe.job.domain.ServerInfo;
+import com.dangdang.ddframe.job.internal.console.ConsoleNode;
 import com.dangdang.ddframe.job.internal.storage.JobNodePath;
 import com.dangdang.ddframe.job.internal.storage.global.GlobalNodePath;
 import com.dangdang.ddframe.reg.base.CoordinatorRegistryCenter;
@@ -46,7 +47,7 @@ public final class JobStatisticsAPIImpl implements JobStatisticsAPI {
         List<JobBriefInfo> result = new ArrayList<JobBriefInfo>(jobNames.size());
         for (String each : jobNames) {
             // 去除全局配置和锁
-        	if (each.equals(GlobalNodePath.GLOBAL) || each.equals("latch")) {
+        	if (each.equals(GlobalNodePath.GLOBAL) || each.equals(ConsoleNode.ROOT)) {
         		continue;
         	}
             JobNodePath jobNodePath = new JobNodePath(each);

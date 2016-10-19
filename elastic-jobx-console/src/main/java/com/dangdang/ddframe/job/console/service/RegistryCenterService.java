@@ -26,11 +26,11 @@ public interface RegistryCenterService {
     
     Collection<RegistryCenterConfiguration> loadAll();
     
-    RegistryCenterConfiguration load(String name);
-    
+    RegistryCenterConfiguration load(String namespace);
+
     Optional<RegistryCenterConfiguration> loadActivated();
     
     boolean add(RegistryCenterConfiguration config);
     
-    void delete(String name);
+    void delete(String namespace);
 }

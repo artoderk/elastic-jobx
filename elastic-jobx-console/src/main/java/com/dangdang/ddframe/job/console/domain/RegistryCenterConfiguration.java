@@ -17,21 +17,20 @@
 
 package com.dangdang.ddframe.job.console.domain;
 
-import java.io.Serializable;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"zkAddressList", "namespace", "digest", "activated"})
+@EqualsAndHashCode(exclude = {"name", "zkAddressList", "digest", "activated"})
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
@@ -45,7 +44,7 @@ public class RegistryCenterConfiguration implements Serializable {
     @XmlAttribute(required = true)
     private String zkAddressList;
     
-    @XmlAttribute
+    @XmlAttribute(required = true)
     private String namespace;
     
     @XmlAttribute
@@ -54,7 +53,7 @@ public class RegistryCenterConfiguration implements Serializable {
     @XmlAttribute
     private boolean activated;
     
-    public RegistryCenterConfiguration(final String name) {
-        this.name = name;
+    public RegistryCenterConfiguration(final String namespace) {
+        this.namespace = namespace;
     }
 }

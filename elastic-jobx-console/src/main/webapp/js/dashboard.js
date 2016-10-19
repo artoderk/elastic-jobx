@@ -14,8 +14,9 @@ function renderRegistryCenterForDashboardNav() {
         var $registryCenterDimension = $("#registry-center-dimension");
         $registryCenterDimension.empty();
         for (var i = 0; i < data.length; i++) {
-            var regName = data[i].name;
-            var liContent = "<a href='#' reg-name='" + regName + "' data-loading-text='切换中...'>" + regName + "</a>";
+            var name = data[i].name;
+            var regName = data[i].namespace;
+            var liContent = "<a href='#' name='" + name + "' reg-name='" + regName + "' data-loading-text='切换中...'>" + regName + "</a>";
             if (activatedRegCenter && activatedRegCenter === regName) {
                 $registryCenterDimension.append("<li class='open'>" + liContent + "</li>");
             } else {
@@ -30,7 +31,7 @@ function bindConnectLink() {
         event.preventDefault();
         var link = $(this).button("loading");
         var regName = $(event.currentTarget).attr("reg-name");
-        $.post("registry_center/connect", {name : regName}, function (data) {
+        $.post("registry_center/connect", {namespace : regName}, function (data) {
             if (data) {
                 window.location = "overview";
             } else {
