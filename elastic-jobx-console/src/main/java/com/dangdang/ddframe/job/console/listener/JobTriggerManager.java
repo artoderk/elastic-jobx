@@ -44,8 +44,10 @@ public class JobTriggerManager {
     public void start() {
         if (isMonitorTriggerHistory() && consoleRegistryCenter.hasLeadership()) {
             startTrigger();
+            log.info("Job trigger listener start. namespace:" + getNamespace());
+        } else {
+            log.info("start() method is ignored, because this server isn't leader. namespace:" + getNamespace());
         }
-        log.info("Job trigger listener start. namespace:" + getNamespace());
     }
 
     /**
@@ -54,8 +56,10 @@ public class JobTriggerManager {
     public void close(){
         if (jobExecutorListener != null) {
             namespaceNodeStorage.removeDataListener(jobExecutorListener);
+            log.info("Job trigger listener close. namespace:" + getNamespace());
+        } else {
+            log.info("close() method is ignored, because this server isn't leader. namespace:" + getNamespace());
         }
-        log.info("Job trigger listener close. namespace:" + getNamespace());
     }
 
     /**
@@ -101,7 +105,8 @@ public class JobTriggerManager {
 
         @Override
         protected void dataChanged(final CuratorFramework client, final TreeCacheEvent event, final String path) {
-            if (TreeCacheEvent.Type.NODE_UPDATED == event.getType() && path.equals(GlobalNodePath.HISTORY)) {
+            if ((TreeCacheEvent.Type.NODE_ADDED == event.getType() || TreeCacheEvent.Type.NODE_UPDATED == event.getType())
+                    && path.equals(GlobalNodePath.HISTORY)) {
                 log.info("Global config changed, path=" + path);
                 if (Boolean.valueOf(jobRegistryCenter.get(path))) {
                     start();
