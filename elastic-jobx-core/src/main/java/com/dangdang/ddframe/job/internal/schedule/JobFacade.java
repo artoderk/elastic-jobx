@@ -243,11 +243,20 @@ public class JobFacade {
     
     /**
      * 是否在跳过执行期间内.
-     * 
-     * @return 作业名称
+     *
+     * @return 是否在执行期间
      */
     public boolean inSkipTime() {
-    	Date now = new Date();
-    	return configService.inSkipTime(now) || globalConfigService.inSkipTime(now);
+        Date now = new Date();
+        return configService.inSkipTime(now) || globalConfigService.inSkipTime(now);
+    }
+
+    /**
+     * 本地作业服务器是否被失效.
+     *
+     * @return 是否失效
+     */
+    public boolean isLocalServerDisabled() {
+        return serverService.isLocalServerDisabled();
     }
 }

@@ -155,6 +155,15 @@ public class ServerService {
         return jobNodeStorage.isJobNodeExisted(ServerNode.getStatusNode(ip)) && !jobNodeStorage.isJobNodeExisted(ServerNode.getPausedNode(ip))
                 && !jobNodeStorage.isJobNodeExisted(ServerNode.getDisabledNode(ip)) && !jobNodeStorage.isJobNodeExisted(ServerNode.getShutdownNode(ip));
     }
+
+    /**
+     * 本地作业服务器是否被失效.
+     *
+     * @return 是否失效
+     */
+    public boolean isLocalServerDisabled() {
+        return jobNodeStorage.isJobNodeExisted(ServerNode.getDisabledNode(localHostService.getIp()));
+    }
     
     /**
      * 判断当前服务器是否是等待执行的状态.

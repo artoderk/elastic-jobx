@@ -44,8 +44,12 @@ public abstract class AbstractElasticJob implements ElasticJob {
     @Override
     public final void execute(final JobExecutionContext context) throws JobExecutionException {
         log.trace("Elastic job: job execute begin, job execution context:{}.", context);
+        if (jobFacade.isLocalServerDisabled()) {
+            log.debug("Elastic job: server is disabled, skip this execution.");
+            return;
+        }
         if (jobFacade.inSkipTime()) {
-        	log.trace("Elastic job: in skip time, skip this execution.");
+        	log.debug("Elastic job: in skip time, skip this execution.");
         	return;
         }
         jobFacade.checkMaxTimeDiffSecondsTolerable();
