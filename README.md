@@ -23,7 +23,7 @@
 * **动态分片策略功能：** 可以在管控平台上传分片策略类，动态调整分片策略。
 * ![动态分片策略功能](https://github.com/artoderk/elastic-jobx/blob/master/elastic-jobx-doc/content/img/console_F03.png)
 
-* **作业执行历史信息记录功能：** 通过在管控平台选主一台服务器监控ZK，记录作业执行记录(目前实现了PostgreSql的存储，可在全局配置中关闭)。并实现了一个清理作业，默认清理时间为15天。
+* **作业执行历史信息记录功能：** 通过在管控平台选主一台服务器监控ZK，记录作业执行记录(目前实现了PostgreSql的存储，可在全局配置中关闭，默认打开)。并实现了一个清理作业，默认清理时间为15天。
 * ![历史信息记录功能](https://github.com/artoderk/elastic-jobx/blob/master/elastic-jobx-doc/content/img/console_F04.PNG)
 
 * **作业手动触发功能：** 可以在管控平台手动触发Job。
